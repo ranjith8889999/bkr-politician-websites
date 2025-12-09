@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | BKR Admin Panel</title>
+    <link rel="stylesheet" href="../../css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .settings-section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .settings-section h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .settings-section h3 i {
+            color: var(--accent-orange);
+        }
+        
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+        
+        .setting-info h4 {
+            margin-bottom: 5px;
+        }
+        
+        .setting-info p {
+            color: #888;
+            font-size: 0.9rem;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 30px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+        
+        .toggle-switch input:checked + .toggle-slider {
+            background: var(--accent-orange);
+        }
+        
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(30px);
+        }
+        
+        .danger-zone {
+            border: 2px solid #dc3545;
+            background: #fff5f5;
+        }
+        
+        .danger-zone h3 {
+            color: #dc3545;
+        }
+        
+        .danger-zone h3 i {
+            color: #dc3545;
+        }
+        
+        .backup-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .backup-info span {
+            font-size: 0.85rem;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <h2>B<span>K</span>R</h2>
+                <p>Admin Panel</p>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="health-camps.html" class="nav-item">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>Health Camps</span>
+                </a>
+                <a href="gallery.html" class="nav-item">
+                    <i class="fas fa-images"></i>
+                    <span>Gallery</span>
+                </a>
+                <a href="news.html" class="nav-item">
+                    <i class="fas fa-newspaper"></i>
+                    <span>News & Updates</span>
+                </a>
+                <a href="complaints.html" class="nav-item">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span>Complaints</span>
+                </a>
+                <a href="feedback.html" class="nav-item">
+                    <i class="fas fa-comment-dots"></i>
+                    <span>Feedback</span>
+                </a>
+                <a href="content.html" class="nav-item">
+                    <i class="fas fa-edit"></i>
+                    <span>Content</span>
+                </a>
+                <a href="settings.html" class="nav-item active">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="#" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <h1>Settings</h1>
+                    <p>Manage your admin panel settings</p>
+                </div>
+            </header>
+            
+            <!-- Content -->
+            <div class="admin-content">
+                <!-- Account Settings -->
+                <div class="settings-section">
+                    <h3><i class="fas fa-user-cog"></i> Account Settings</h3>
+                    <form id="accountForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Admin Username</label>
+                                <input type="text" class="form-control" name="username" value="admin">
+                            </div>
+                            <div class="form-group">
+                                <label>Current Password</label>
+                                <input type="password" class="form-control" name="currentPassword" placeholder="Enter current password">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>New Password</label>
+                                <input type="password" class="form-control" name="newPassword" placeholder="Enter new password">
+                            </div>
+                            <div class="form-group">
+                                <label>Confirm New Password</label>
+                                <input type="password" class="form-control" name="confirmPassword" placeholder="Confirm new password">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-secondary">
+                            <i class="fas fa-save"></i> Update Account
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- General Settings -->
+                <div class="settings-section">
+                    <h3><i class="fas fa-sliders-h"></i> General Settings</h3>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Email Notifications</h4>
+                            <p>Receive email notifications for new complaints and feedback</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="emailNotifications" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Show Health Camps on Homepage</h4>
+                            <p>Display upcoming health camps section on the main website</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="showHealthCamps" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Show News Section</h4>
+                            <p>Display news and updates section on the main website</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="showNews" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Enable Volunteer Form</h4>
+                            <p>Allow visitors to submit volunteer registration forms</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="enableVolunteer" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Backup & Restore -->
+                <div class="settings-section">
+                    <h3><i class="fas fa-database"></i> Backup & Restore</h3>
+                    <p style="color: #888; margin-bottom: 20px;">Create backups of your data or restore from a previous backup.</p>
+                    
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 25px;">
+                        <button class="btn btn-secondary" onclick="createBackup()">
+                            <i class="fas fa-download"></i> Create Backup
+                        </button>
+                        <label class="btn btn-outline" style="cursor: pointer;">
+                            <i class="fas fa-upload"></i> Restore Backup
+                            <input type="file" id="restoreFile" accept=".json" style="display: none;" onchange="restoreBackup(this)">
+                        </label>
+                    </div>
+                    
+                    <div id="backupsList">
+                        <h4 style="margin-bottom: 15px;">Recent Backups</h4>
+                        <div class="backup-item">
+                            <div class="backup-info">
+                                <strong>No backups created yet</strong>
+                                <span>Create a backup to save your data</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Danger Zone -->
+                <div class="settings-section danger-zone">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Danger Zone</h3>
+                    <p style="color: #888; margin-bottom: 20px;">These actions are irreversible. Please proceed with caution.</p>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Clear All Complaints</h4>
+                            <p>Permanently delete all complaint records</p>
+                        </div>
+                        <button class="btn btn-danger" onclick="clearData('complaints')">
+                            <i class="fas fa-trash"></i> Clear
+                        </button>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Clear All Feedback</h4>
+                            <p>Permanently delete all feedback records</p>
+                        </div>
+                        <button class="btn btn-danger" onclick="clearData('feedback')">
+                            <i class="fas fa-trash"></i> Clear
+                        </button>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Clear Gallery</h4>
+                            <p>Permanently delete all gallery images</p>
+                        </div>
+                        <button class="btn btn-danger" onclick="clearData('gallery')">
+                            <i class="fas fa-trash"></i> Clear
+                        </button>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h4>Reset All Data</h4>
+                            <p>Clear all data and restore to default settings</p>
+                        </div>
+                        <button class="btn btn-danger" onclick="resetAllData()">
+                            <i class="fas fa-bomb"></i> Reset All
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/admin.js"></script>
+    <script>
+        // Check authentication
+        if (localStorage.getItem('adminLoggedIn') !== 'true') {
+            window.location.href = 'login.html';
+        }
+        
+        function logout() {
+            localStorage.removeItem('adminLoggedIn');
+            localStorage.removeItem('adminUser');
+            window.location.href = 'login.html';
+        }
+        
+        // Load settings
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSettings();
+        });
+        
+        function loadSettings() {
+            const settings = JSON.parse(localStorage.getItem('adminSettings') || '{}');
+            
+            document.getElementById('emailNotifications').checked = settings.emailNotifications !== false;
+            document.getElementById('showHealthCamps').checked = settings.showHealthCamps !== false;
+            document.getElementById('showNews').checked = settings.showNews !== false;
+            document.getElementById('enableVolunteer').checked = settings.enableVolunteer !== false;
+        }
+        
+        // Save settings when changed
+        document.querySelectorAll('.toggle-switch input').forEach(toggle => {
+            toggle.addEventListener('change', function() {
+                const settings = JSON.parse(localStorage.getItem('adminSettings') || '{}');
+                settings[this.id] = this.checked;
+                localStorage.setItem('adminSettings', JSON.stringify(settings));
+                showNotification('Settings saved!', 'success');
+            });
+        });
+        
+        // Account form
+        document.getElementById('accountForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+            
+            // Simple validation
+            if (data.newPassword) {
+                if (data.newPassword !== data.confirmPassword) {
+                    showNotification('Passwords do not match!', 'error');
+                    return;
+                }
+                
+                if (data.newPassword.length < 6) {
+                    showNotification('Password must be at least 6 characters!', 'error');
+                    return;
+                }
+                
+                // Save new credentials (in production, this would be handled server-side)
+                const credentials = {
+                    username: data.username,
+                    password: data.newPassword
+                };
+                localStorage.setItem('adminCredentials', JSON.stringify(credentials));
+                showNotification('Account updated successfully!', 'success');
+            } else {
+                showNotification('No changes to save', 'info');
+            }
+        });
+        
+        // Backup functions
+        function createBackup() {
+            const backup = {
+                timestamp: new Date().toISOString(),
+                data: {
+                    complaints: JSON.parse(localStorage.getItem('complaints') || '[]'),
+                    feedback: JSON.parse(localStorage.getItem('feedback') || '[]'),
+                    healthCamps: JSON.parse(localStorage.getItem('healthCamps') || '[]'),
+                    news: JSON.parse(localStorage.getItem('news') || '[]'),
+                    gallery: JSON.parse(localStorage.getItem('gallery') || '[]'),
+                    websiteContent: JSON.parse(localStorage.getItem('websiteContent') || '{}'),
+                    journey: JSON.parse(localStorage.getItem('journey') || '[]'),
+                    initiatives: JSON.parse(localStorage.getItem('initiatives') || '[]'),
+                    agendas: JSON.parse(localStorage.getItem('agendas') || '[]'),
+                    adminSettings: JSON.parse(localStorage.getItem('adminSettings') || '{}')
+                }
+            };
+            
+            const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `bkr_backup_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            
+            showNotification('Backup created successfully!', 'success');
+        }
+        
+        function restoreBackup(input) {
+            const file = input.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const backup = JSON.parse(e.target.result);
+                    
+                    if (!backup.data) {
+                        showNotification('Invalid backup file!', 'error');
+                        return;
+                    }
+                    
+                    if (!confirm('This will replace all current data. Are you sure?')) return;
+                    
+                    // Restore data
+                    Object.keys(backup.data).forEach(key => {
+                        localStorage.setItem(key, JSON.stringify(backup.data[key]));
+                    });
+                    
+                    showNotification('Backup restored successfully!', 'success');
+                    setTimeout(() => location.reload(), 1000);
+                } catch (err) {
+                    showNotification('Error reading backup file!', 'error');
+                }
+            };
+            reader.readAsText(file);
+        }
+        
+        // Clear data functions
+        function clearData(type) {
+            const messages = {
+                complaints: 'all complaints',
+                feedback: 'all feedback',
+                gallery: 'all gallery images'
+            };
+            
+            if (!confirm(`Are you sure you want to delete ${messages[type]}? This cannot be undone!`)) return;
+            
+            localStorage.removeItem(type);
+            showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} cleared successfully!`, 'success');
+        }
+        
+        function resetAllData() {
+            if (!confirm('WARNING: This will delete ALL data including complaints, feedback, gallery, news, and settings. This cannot be undone!')) return;
+            
+            if (!confirm('Are you ABSOLUTELY sure? Type "RESET" in the next prompt to confirm.')) return;
+            
+            const confirmation = prompt('Type RESET to confirm:');
+            if (confirmation !== 'RESET') {
+                showNotification('Reset cancelled', 'info');
+                return;
+            }
+            
+            // Clear all data
+            const keysToRemove = [
+                'complaints', 'feedback', 'healthCamps', 'news', 'gallery',
+                'websiteContent', 'journey', 'initiatives', 'agendas', 'adminSettings'
+            ];
+            
+            keysToRemove.forEach(key => localStorage.removeItem(key));
+            
+            showNotification('All data has been reset!', 'success');
+            setTimeout(() => location.reload(), 1000);
+        }
+    </script>
+</body>
+</html>

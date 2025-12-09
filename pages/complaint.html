@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="File a Complaint - B Kishore Reddy | Congress Leader | Quthbullapur">
+    <title>File Complaint | B Kishore Reddy</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .page-hero {
+            background: linear-gradient(135deg, #1e3a5f 0%, #0a1628 100%);
+            padding: 150px 0 80px;
+            text-align: center;
+            color: white;
+        }
+        
+        .page-hero h1 {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .page-hero p {
+            font-size: 18px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .breadcrumb {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .breadcrumb a {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .breadcrumb span {
+            color: #ff6b35;
+        }
+        
+        .complaint-section {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+        
+        .complaint-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 50px;
+            align-items: start;
+        }
+        
+        .complaint-info {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+        }
+        
+        .complaint-info h2 {
+            color: #1e3a5f;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        
+        .complaint-info p {
+            color: #6c757d;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+        
+        .info-item i {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #ff6b35, #ff9933);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        
+        .info-item h4 {
+            color: #1e3a5f;
+            margin-bottom: 5px;
+        }
+        
+        .info-item p {
+            margin: 0;
+            font-size: 14px;
+        }
+        
+        .complaint-form-card {
+            background: white;
+            padding: 50px;
+            border-radius: 16px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+        }
+        
+        .complaint-form-card h2 {
+            color: #1e3a5f;
+            font-size: 28px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #1e3a5f;
+        }
+        
+        .form-group label .required {
+            color: #dc3545;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #ff6b35;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255,107,53,0.1);
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .file-upload {
+            border: 2px dashed #e0e0e0;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .file-upload:hover {
+            border-color: #ff6b35;
+            background: rgba(255,107,53,0.05);
+        }
+        
+        .file-upload i {
+            font-size: 40px;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+        
+        .file-upload p {
+            color: #6c757d;
+            margin: 0;
+        }
+        
+        .file-upload input {
+            display: none;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #ff6b35, #ff9933);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255,107,53,0.4);
+        }
+        
+        .privacy-note {
+            text-align: center;
+            margin-top: 20px;
+            color: #6c757d;
+            font-size: 14px;
+        }
+        
+        .privacy-note i {
+            color: #28a745;
+        }
+        
+        @media (max-width: 992px) {
+            .complaint-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .page-hero h1 {
+                font-size: 32px;
+            }
+            
+            .complaint-form-card {
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="nav-container">
+            <a href="../index.html" class="logo">
+                <span class="logo-text">B<span class="highlight">K</span>R</span>
+            </a>
+            <div class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="../index.html" class="nav-link">Home</a></li>
+                <li><a href="../index.html#about" class="nav-link">About</a></li>
+                <li><a href="../index.html#journey" class="nav-link">Journey</a></li>
+                <li><a href="../index.html#initiatives" class="nav-link">Initiatives</a></li>
+                <li><a href="../index.html#gallery" class="nav-link">Gallery</a></li>
+                <li><a href="health-camps.html" class="nav-link">Health Camps</a></li>
+                <li><a href="../index.html#contact" class="nav-link">Contact</a></li>
+                <li><a href="complaint.html" class="nav-link nav-btn active">Complaint</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+        <div class="container">
+            <h1>File a Complaint</h1>
+            <p>Your voice matters. Report any issues or concerns and we'll ensure they're addressed promptly.</p>
+            <div class="breadcrumb">
+                <a href="../index.html">Home</a>
+                <span>/</span>
+                <span>Complaint</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Complaint Section -->
+    <section class="complaint-section">
+        <div class="container">
+            <div class="complaint-grid">
+                <div class="complaint-info animate-on-scroll">
+                    <h2>We're Here to Help</h2>
+                    <p>If you're facing any issues in your locality or have concerns about any matter, please file a complaint. We are committed to addressing your concerns and working towards solutions.</p>
+                    
+                    <div class="info-item">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <h4>Quick Response</h4>
+                            <p>We aim to respond to all complaints within 48 hours</p>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <div>
+                            <h4>Confidential</h4>
+                            <p>Your information is kept strictly confidential</p>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <i class="fas fa-chart-line"></i>
+                        <div>
+                            <h4>Track Status</h4>
+                            <p>You'll receive updates on your complaint status</p>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <i class="fas fa-headset"></i>
+                        <div>
+                            <h4>Need Urgent Help?</h4>
+                            <p>Call us: +91-9XXXXXX363</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="complaint-form-card animate-on-scroll">
+                    <h2><i class="fas fa-edit"></i> Submit Your Complaint</h2>
+                    <form id="complaintForm" action="https://formsubmit.co/ranjith888999@gmail.com" method="POST">
+                        <!-- FormSubmit Configuration -->
+                        <input type="hidden" name="_subject" value="New Complaint from BKR Website">
+                        <input type="hidden" name="_captcha" value="false">
+                        <input type="hidden" name="_template" value="table">
+                        <input type="hidden" name="_next" value="">
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Full Name <span class="required">*</span></label>
+                                <input type="text" name="name" placeholder="Enter your full name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Phone Number <span class="required">*</span></label>
+                                <input type="tel" name="phone" placeholder="+91 XXXXX XXXXX" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Email Address</label>
+                                <input type="email" name="email" placeholder="your@email.com">
+                            </div>
+                            <div class="form-group">
+                                <label>Area/Locality <span class="required">*</span></label>
+                                <select name="area" required>
+                                    <option value="">Select your area</option>
+                                    <option value="Quthbullapur">Quthbullapur</option>
+                                    <option value="Balanagar">Balanagar</option>
+                                    <option value="Kukatpally">Kukatpally</option>
+                                    <option value="Kompally">Kompally</option>
+                                    <option value="Medchal">Medchal</option>
+                                    <option value="Alwal">Alwal</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Complaint Category <span class="required">*</span></label>
+                            <select name="category" required>
+                                <option value="">Select category</option>
+                                <option value="Infrastructure">Infrastructure (Roads, Drainage, etc.)</option>
+                                <option value="Water Supply">Water Supply</option>
+                                <option value="Electricity">Electricity Issues</option>
+                                <option value="Sanitation">Sanitation & Cleanliness</option>
+                                <option value="Healthcare">Healthcare Services</option>
+                                <option value="Education">Education</option>
+                                <option value="Employment">Employment/Jobs</option>
+                                <option value="Corruption">Corruption</option>
+                                <option value="Safety">Safety & Security</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Subject <span class="required">*</span></label>
+                            <input type="text" name="subject" placeholder="Brief subject of your complaint" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Complaint Details <span class="required">*</span></label>
+                            <textarea name="message" placeholder="Please describe your complaint in detail. Include specific locations, dates, and any other relevant information..." required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Address (if applicable)</label>
+                            <input type="text" name="address" placeholder="Complete address related to the complaint">
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-paper-plane"></i> Submit Complaint
+                        </button>
+                        
+                        <p class="privacy-note">
+                            <i class="fas fa-lock"></i> Your information is secure and will only be used to address your complaint.
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <h3>B Kishore Reddy</h3>
+                    <p>Congress Leader & MLA Candidate for Quthbullapur Constituency. Dedicated to serving the people with integrity.</p>
+                    <div class="footer-social">
+                        <a href="https://www.instagram.com/kishorereddy8925/" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.youtube.com/@BONGUNURIKISHOREREDDYOFFICIAL" target="_blank"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="../index.html#about">About</a></li>
+                        <li><a href="../index.html#journey">Political Journey</a></li>
+                        <li><a href="../index.html#initiatives">Initiatives</a></li>
+                        <li><a href="../index.html#agendas">Key Agendas</a></li>
+                        <li><a href="../index.html#gallery">Gallery</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Important</h4>
+                    <ul>
+                        <li><a href="complaint.html">File Complaint</a></li>
+                        <li><a href="feedback.html">Give Feedback</a></li>
+                        <li><a href="health-camps.html">Health Camps</a></li>
+                        <li><a href="../index.html#volunteer">Volunteer</a></li>
+                        <li><a href="../index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contact</h4>
+                    <p><i class="fas fa-map-marker-alt"></i> Quthbullapur, Telangana</p>
+                    <p><i class="fas fa-phone"></i> +91-9XXXXXX363</p>
+                    <p><i class="fas fa-envelope"></i> ranjith888999@gmail.com</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 B Kishore Reddy. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Buttons -->
+    <div class="floating-buttons">
+        <a href="https://wa.me/919XXXXXX363" class="fab-btn whatsapp" target="_blank" title="WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script>
+        // Store complaint locally as backup
+        document.getElementById('complaintForm').addEventListener('submit', function(e) {
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+            
+            // Store in localStorage
+            const complaints = JSON.parse(localStorage.getItem('complaints') || '[]');
+            complaints.push({
+                id: Date.now(),
+                ...data,
+                date: new Date().toLocaleDateString(),
+                status: 'pending'
+            });
+            localStorage.setItem('complaints', JSON.stringify(complaints));
+        });
+    </script>
+</body>
+</html>

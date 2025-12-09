@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Give Feedback - B Kishore Reddy | Congress Leader | Quthbullapur">
+    <title>Give Feedback | B Kishore Reddy</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .page-hero {
+            background: linear-gradient(135deg, #1e3a5f 0%, #0a1628 100%);
+            padding: 150px 0 80px;
+            text-align: center;
+            color: white;
+        }
+        
+        .page-hero h1 {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .page-hero p {
+            font-size: 18px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .breadcrumb {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .breadcrumb a {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .breadcrumb span {
+            color: #ff6b35;
+        }
+        
+        .feedback-section {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+        
+        .feedback-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .feedback-card {
+            background: white;
+            padding: 50px;
+            border-radius: 16px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+        }
+        
+        .feedback-card h2 {
+            color: #1e3a5f;
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .feedback-card .subtitle {
+            text-align: center;
+            color: #6c757d;
+            margin-bottom: 40px;
+        }
+        
+        .rating-section {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+        
+        .rating-section h3 {
+            color: #1e3a5f;
+            margin-bottom: 20px;
+        }
+        
+        .rating-stars {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .rating-stars input {
+            display: none;
+        }
+        
+        .rating-stars label {
+            font-size: 40px;
+            color: #ddd;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .rating-stars label:hover,
+        .rating-stars label:hover ~ label,
+        .rating-stars input:checked ~ label {
+            color: #ffc107;
+        }
+        
+        .rating-stars {
+            flex-direction: row-reverse;
+            justify-content: center;
+        }
+        
+        .rating-stars input:checked + label,
+        .rating-stars input:checked + label ~ label {
+            color: #ffc107;
+        }
+        
+        .rating-stars label:hover,
+        .rating-stars label:hover ~ label {
+            color: #ffc107;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #1e3a5f;
+        }
+        
+        .form-group label .required {
+            color: #dc3545;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #ff6b35;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255,107,53,0.1);
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .feedback-categories {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .category-item {
+            position: relative;
+        }
+        
+        .category-item input {
+            display: none;
+        }
+        
+        .category-item label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .category-item label i {
+            font-size: 28px;
+            color: #6c757d;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .category-item input:checked + label {
+            border-color: #ff6b35;
+            background: rgba(255,107,53,0.05);
+        }
+        
+        .category-item input:checked + label i {
+            color: #ff6b35;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #ff6b35, #ff9933);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255,107,53,0.4);
+        }
+        
+        .privacy-note {
+            text-align: center;
+            margin-top: 20px;
+            color: #6c757d;
+            font-size: 14px;
+        }
+        
+        .privacy-note i {
+            color: #28a745;
+        }
+        
+        @media (max-width: 768px) {
+            .page-hero h1 {
+                font-size: 32px;
+            }
+            
+            .feedback-card {
+                padding: 30px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .feedback-categories {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .rating-stars label {
+                font-size: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="nav-container">
+            <a href="../index.html" class="logo">
+                <span class="logo-text">B<span class="highlight">K</span>R</span>
+            </a>
+            <div class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="../index.html" class="nav-link">Home</a></li>
+                <li><a href="../index.html#about" class="nav-link">About</a></li>
+                <li><a href="../index.html#journey" class="nav-link">Journey</a></li>
+                <li><a href="../index.html#initiatives" class="nav-link">Initiatives</a></li>
+                <li><a href="../index.html#gallery" class="nav-link">Gallery</a></li>
+                <li><a href="health-camps.html" class="nav-link">Health Camps</a></li>
+                <li><a href="../index.html#contact" class="nav-link">Contact</a></li>
+                <li><a href="complaint.html" class="nav-link nav-btn">Complaint</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+        <div class="container">
+            <h1>Share Your Feedback</h1>
+            <p>Your feedback helps us serve you better. Tell us about your experience and suggestions.</p>
+            <div class="breadcrumb">
+                <a href="../index.html">Home</a>
+                <span>/</span>
+                <span>Feedback</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feedback Section -->
+    <section class="feedback-section">
+        <div class="container">
+            <div class="feedback-container">
+                <div class="feedback-card animate-on-scroll">
+                    <h2><i class="fas fa-comment-dots"></i> Your Feedback</h2>
+                    <p class="subtitle">Help us improve by sharing your thoughts and suggestions</p>
+                    
+                    <form id="feedbackForm" action="https://formsubmit.co/ranjith888999@gmail.com" method="POST">
+                        <!-- FormSubmit Configuration -->
+                        <input type="hidden" name="_subject" value="New Feedback from BKR Website">
+                        <input type="hidden" name="_captcha" value="false">
+                        <input type="hidden" name="_template" value="table">
+                        
+                        <!-- Rating Section -->
+                        <div class="rating-section">
+                            <h3>How would you rate your overall experience?</h3>
+                            <div class="rating-stars">
+                                <input type="radio" name="rating" id="star5" value="5">
+                                <label for="star5"><i class="fas fa-star"></i></label>
+                                <input type="radio" name="rating" id="star4" value="4">
+                                <label for="star4"><i class="fas fa-star"></i></label>
+                                <input type="radio" name="rating" id="star3" value="3">
+                                <label for="star3"><i class="fas fa-star"></i></label>
+                                <input type="radio" name="rating" id="star2" value="2">
+                                <label for="star2"><i class="fas fa-star"></i></label>
+                                <input type="radio" name="rating" id="star1" value="1">
+                                <label for="star1"><i class="fas fa-star"></i></label>
+                            </div>
+                        </div>
+                        
+                        <!-- Feedback Category -->
+                        <div class="form-group">
+                            <label>What is your feedback about?</label>
+                            <div class="feedback-categories">
+                                <div class="category-item">
+                                    <input type="radio" name="category" id="cat1" value="Services" required>
+                                    <label for="cat1">
+                                        <i class="fas fa-hands-helping"></i>
+                                        <span>Services</span>
+                                    </label>
+                                </div>
+                                <div class="category-item">
+                                    <input type="radio" name="category" id="cat2" value="Health Camps">
+                                    <label for="cat2">
+                                        <i class="fas fa-heartbeat"></i>
+                                        <span>Health Camps</span>
+                                    </label>
+                                </div>
+                                <div class="category-item">
+                                    <input type="radio" name="category" id="cat3" value="Events">
+                                    <label for="cat3">
+                                        <i class="fas fa-calendar-check"></i>
+                                        <span>Events</span>
+                                    </label>
+                                </div>
+                                <div class="category-item">
+                                    <input type="radio" name="category" id="cat4" value="Website">
+                                    <label for="cat4">
+                                        <i class="fas fa-globe"></i>
+                                        <span>Website</span>
+                                    </label>
+                                </div>
+                                <div class="category-item">
+                                    <input type="radio" name="category" id="cat5" value="Initiatives">
+                                    <label for="cat5">
+                                        <i class="fas fa-lightbulb"></i>
+                                        <span>Initiatives</span>
+                                    </label>
+                                </div>
+                                <div class="category-item">
+                                    <input type="radio" name="category" id="cat6" value="Other">
+                                    <label for="cat6">
+                                        <i class="fas fa-ellipsis-h"></i>
+                                        <span>Other</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Your Name</label>
+                                <input type="text" name="name" placeholder="Enter your name">
+                            </div>
+                            <div class="form-group">
+                                <label>Phone Number</label>
+                                <input type="tel" name="phone" placeholder="+91 XXXXX XXXXX">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" name="email" placeholder="your@email.com">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Your Area</label>
+                            <select name="area">
+                                <option value="">Select your area</option>
+                                <option value="Quthbullapur">Quthbullapur</option>
+                                <option value="Balanagar">Balanagar</option>
+                                <option value="Kukatpally">Kukatpally</option>
+                                <option value="Kompally">Kompally</option>
+                                <option value="Medchal">Medchal</option>
+                                <option value="Alwal">Alwal</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Your Feedback <span class="required">*</span></label>
+                            <textarea name="message" placeholder="Please share your detailed feedback, suggestions, or experience..." required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Any Suggestions for Improvement?</label>
+                            <textarea name="suggestions" placeholder="What could we do better?" rows="4"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-paper-plane"></i> Submit Feedback
+                        </button>
+                        
+                        <p class="privacy-note">
+                            <i class="fas fa-heart"></i> Thank you for taking the time to share your feedback with us!
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <h3>B Kishore Reddy</h3>
+                    <p>Congress Leader & MLA Candidate for Quthbullapur Constituency. Dedicated to serving the people with integrity.</p>
+                    <div class="footer-social">
+                        <a href="https://www.instagram.com/kishorereddy8925/" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.youtube.com/@BONGUNURIKISHOREREDDYOFFICIAL" target="_blank"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="../index.html#about">About</a></li>
+                        <li><a href="../index.html#journey">Political Journey</a></li>
+                        <li><a href="../index.html#initiatives">Initiatives</a></li>
+                        <li><a href="../index.html#agendas">Key Agendas</a></li>
+                        <li><a href="../index.html#gallery">Gallery</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Important</h4>
+                    <ul>
+                        <li><a href="complaint.html">File Complaint</a></li>
+                        <li><a href="feedback.html">Give Feedback</a></li>
+                        <li><a href="health-camps.html">Health Camps</a></li>
+                        <li><a href="../index.html#volunteer">Volunteer</a></li>
+                        <li><a href="../index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contact</h4>
+                    <p><i class="fas fa-map-marker-alt"></i> Quthbullapur, Telangana</p>
+                    <p><i class="fas fa-phone"></i> +91-9XXXXXX363</p>
+                    <p><i class="fas fa-envelope"></i> ranjith888999@gmail.com</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 B Kishore Reddy. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Buttons -->
+    <div class="floating-buttons">
+        <a href="https://wa.me/919XXXXXX363" class="fab-btn whatsapp" target="_blank" title="WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script>
+        // Store feedback locally as backup
+        document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+            
+            // Store in localStorage
+            const feedback = JSON.parse(localStorage.getItem('feedback') || '[]');
+            feedback.push({
+                id: Date.now(),
+                ...data,
+                date: new Date().toLocaleDateString()
+            });
+            localStorage.setItem('feedback', JSON.stringify(feedback));
+        });
+    </script>
+</body>
+</html>

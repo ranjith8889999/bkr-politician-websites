@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Upcoming Health Camps - BKR Foundation | B Kishore Reddy">
+    <title>Health Camps | BKR Foundation | B Kishore Reddy</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .page-hero {
+            background: linear-gradient(135deg, #1e3a5f 0%, #0a1628 100%);
+            padding: 150px 0 80px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .page-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        
+        .page-hero h1 {
+            font-size: 48px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .page-hero p {
+            font-size: 18px;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .breadcrumb {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            position: relative;
+        }
+        
+        .breadcrumb a {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .breadcrumb span {
+            color: #ff6b35;
+        }
+        
+        .foundation-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.1);
+            padding: 10px 25px;
+            border-radius: 30px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .foundation-badge i {
+            color: #ff6b35;
+        }
+        
+        .camps-section {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+        
+        .camps-intro {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 60px;
+        }
+        
+        .camps-intro h2 {
+            color: #1e3a5f;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        
+        .camps-intro p {
+            color: #6c757d;
+            font-size: 18px;
+            line-height: 1.8;
+        }
+        
+        .camps-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .camp-stat {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .camp-stat:hover {
+            transform: translateY(-5px);
+        }
+        
+        .camp-stat i {
+            font-size: 40px;
+            color: #ff6b35;
+            margin-bottom: 15px;
+        }
+        
+        .camp-stat h3 {
+            font-size: 36px;
+            color: #1e3a5f;
+            margin-bottom: 5px;
+        }
+        
+        .camp-stat p {
+            color: #6c757d;
+        }
+        
+        .camps-filter {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 12px 30px;
+            background: white;
+            border: 2px solid #1e3a5f;
+            border-radius: 30px;
+            color: #1e3a5f;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: #1e3a5f;
+            color: white;
+        }
+        
+        .camps-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+        
+        .camp-card-large {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            transition: all 0.3s ease;
+        }
+        
+        .camp-card-large:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        
+        .camp-date-block {
+            background: linear-gradient(135deg, #ff6b35, #ff9933);
+            color: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .camp-date-block .day {
+            font-size: 56px;
+            font-weight: 800;
+            line-height: 1;
+        }
+        
+        .camp-date-block .month {
+            font-size: 20px;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .camp-date-block .year {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .camp-status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+        
+        .camp-status.upcoming {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .camp-status.ongoing {
+            background: #28a745;
+        }
+        
+        .camp-status.completed {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .camp-info {
+            padding: 30px;
+        }
+        
+        .camp-info h3 {
+            color: #1e3a5f;
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+        
+        .camp-details {
+            margin-bottom: 20px;
+        }
+        
+        .camp-details p {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #6c757d;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+        
+        .camp-details p i {
+            color: #ff6b35;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .camp-services {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .camp-services span {
+            background: #f0f2f5;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #1e3a5f;
+        }
+        
+        .camp-cta {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .camp-cta .btn {
+            padding: 12px 25px;
+            font-size: 14px;
+        }
+        
+        .no-camps {
+            text-align: center;
+            padding: 60px;
+            background: white;
+            border-radius: 16px;
+            grid-column: 1 / -1;
+        }
+        
+        .no-camps i {
+            font-size: 60px;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .no-camps h3 {
+            color: #1e3a5f;
+            margin-bottom: 10px;
+        }
+        
+        .no-camps p {
+            color: #6c757d;
+        }
+        
+        .past-camps-section {
+            padding: 80px 0;
+            background: white;
+        }
+        
+        .past-camps-section .section-header {
+            margin-bottom: 50px;
+        }
+        
+        .past-camps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        
+        .past-camp-card {
+            background: #f8f9fa;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .past-camp-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .past-camp-image {
+            height: 180px;
+            background: linear-gradient(135deg, #1e3a5f, #2d5a87);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .past-camp-image i {
+            font-size: 60px;
+            color: rgba(255,255,255,0.3);
+        }
+        
+        .past-camp-content {
+            padding: 25px;
+        }
+        
+        .past-camp-content h4 {
+            color: #1e3a5f;
+            margin-bottom: 15px;
+        }
+        
+        .past-camp-content p {
+            color: #6c757d;
+            font-size: 14px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .past-camp-content p i {
+            color: #ff6b35;
+            width: 16px;
+        }
+        
+        .past-camp-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .past-camp-stats span {
+            font-size: 14px;
+            color: #28a745;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 992px) {
+            .camps-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .camps-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .past-camps-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .page-hero h1 {
+                font-size: 32px;
+            }
+            
+            .camp-card-large {
+                grid-template-columns: 1fr;
+            }
+            
+            .camp-date-block {
+                flex-direction: row;
+                gap: 15px;
+                padding: 20px;
+            }
+            
+            .camp-date-block .day {
+                font-size: 36px;
+            }
+            
+            .camps-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .past-camps-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .camp-cta {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="nav-container">
+            <a href="../index.html" class="logo">
+                <span class="logo-text">B<span class="highlight">K</span>R</span>
+            </a>
+            <div class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="../index.html" class="nav-link">Home</a></li>
+                <li><a href="../index.html#about" class="nav-link">About</a></li>
+                <li><a href="../index.html#journey" class="nav-link">Journey</a></li>
+                <li><a href="../index.html#initiatives" class="nav-link">Initiatives</a></li>
+                <li><a href="../index.html#gallery" class="nav-link">Gallery</a></li>
+                <li><a href="health-camps.html" class="nav-link active">Health Camps</a></li>
+                <li><a href="../index.html#contact" class="nav-link">Contact</a></li>
+                <li><a href="complaint.html" class="nav-link nav-btn">Complaint</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+        <div class="container">
+            <div class="foundation-badge">
+                <i class="fas fa-heartbeat"></i>
+                <span>BKR Foundation</span>
+            </div>
+            <h1>Upcoming Health Camps</h1>
+            <p>Through the BKR Foundation, we organize free health camps to provide quality medical care to those in need. Join us in our mission to ensure healthcare for all.</p>
+            <div class="breadcrumb">
+                <a href="../index.html">Home</a>
+                <span>/</span>
+                <span>Health Camps</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Health Camps Section -->
+    <section class="camps-section">
+        <div class="container">
+            <!-- Stats -->
+            <div class="camps-stats animate-on-scroll">
+                <div class="camp-stat">
+                    <i class="fas fa-clinic-medical"></i>
+                    <h3>100+</h3>
+                    <p>Camps Organized</p>
+                </div>
+                <div class="camp-stat">
+                    <i class="fas fa-users"></i>
+                    <h3>50,000+</h3>
+                    <p>People Benefited</p>
+                </div>
+                <div class="camp-stat">
+                    <i class="fas fa-user-md"></i>
+                    <h3>200+</h3>
+                    <p>Doctors Participated</p>
+                </div>
+                <div class="camp-stat">
+                    <i class="fas fa-pills"></i>
+                    <h3>Free</h3>
+                    <p>Medicines Distributed</p>
+                </div>
+            </div>
+            
+            <!-- Intro -->
+            <div class="camps-intro animate-on-scroll">
+                <h2>Healthcare for Everyone</h2>
+                <p>The BKR Foundation is committed to providing accessible healthcare to all residents of Quthbullapur and surrounding areas. Our free health camps offer various medical services including general check-ups, eye examinations, dental care, and specialized consultations.</p>
+            </div>
+            
+            <!-- Filter -->
+            <div class="camps-filter animate-on-scroll">
+                <button class="filter-btn active" data-filter="upcoming">Upcoming</button>
+                <button class="filter-btn" data-filter="all">All Camps</button>
+            </div>
+            
+            <!-- Camps Grid -->
+            <div class="camps-grid" id="campsGrid">
+                <!-- Camp 1 -->
+                <div class="camp-card-large animate-on-scroll" data-status="upcoming">
+                    <div class="camp-date-block">
+                        <div>
+                            <div class="day">15</div>
+                            <div class="month">Dec</div>
+                            <div class="year">2024</div>
+                        </div>
+                        <span class="camp-status upcoming">Upcoming</span>
+                    </div>
+                    <div class="camp-info">
+                        <h3>Free Eye Check-up & Spectacles Camp</h3>
+                        <div class="camp-details">
+                            <p><i class="fas fa-map-marker-alt"></i> Community Hall, Quthbullapur</p>
+                            <p><i class="fas fa-clock"></i> 9:00 AM - 5:00 PM</p>
+                            <p><i class="fas fa-user-md"></i> Expert Ophthalmologists</p>
+                            <p><i class="fas fa-phone"></i> +91-9XXXXXX363</p>
+                        </div>
+                        <div class="camp-services">
+                            <span>Eye Screening</span>
+                            <span>Free Spectacles</span>
+                            <span>Cataract Check</span>
+                            <span>Glaucoma Test</span>
+                        </div>
+                        <div class="camp-cta">
+                            <a href="https://wa.me/919XXXXXX363?text=I want to register for Eye Camp on Dec 15" class="btn btn-primary" target="_blank">
+                                <i class="fab fa-whatsapp"></i> Register Now
+                            </a>
+                            <a href="#" class="btn btn-secondary">
+                                <i class="fas fa-share-alt"></i> Share
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Camp 2 -->
+                <div class="camp-card-large animate-on-scroll" data-status="upcoming">
+                    <div class="camp-date-block">
+                        <div>
+                            <div class="day">22</div>
+                            <div class="month">Dec</div>
+                            <div class="year">2024</div>
+                        </div>
+                        <span class="camp-status upcoming">Upcoming</span>
+                    </div>
+                    <div class="camp-info">
+                        <h3>General Health Check-up Camp</h3>
+                        <div class="camp-details">
+                            <p><i class="fas fa-map-marker-alt"></i> BKR Foundation Center, Balanagar</p>
+                            <p><i class="fas fa-clock"></i> 10:00 AM - 4:00 PM</p>
+                            <p><i class="fas fa-user-md"></i> General Physicians & Specialists</p>
+                            <p><i class="fas fa-phone"></i> +91-9XXXXXX363</p>
+                        </div>
+                        <div class="camp-services">
+                            <span>BP Check</span>
+                            <span>Sugar Test</span>
+                            <span>ECG</span>
+                            <span>Consultation</span>
+                            <span>Free Medicines</span>
+                        </div>
+                        <div class="camp-cta">
+                            <a href="https://wa.me/919XXXXXX363?text=I want to register for Health Camp on Dec 22" class="btn btn-primary" target="_blank">
+                                <i class="fab fa-whatsapp"></i> Register Now
+                            </a>
+                            <a href="#" class="btn btn-secondary">
+                                <i class="fas fa-share-alt"></i> Share
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Camp 3 -->
+                <div class="camp-card-large animate-on-scroll" data-status="upcoming">
+                    <div class="camp-date-block">
+                        <div>
+                            <div class="day">05</div>
+                            <div class="month">Jan</div>
+                            <div class="year">2025</div>
+                        </div>
+                        <span class="camp-status upcoming">Upcoming</span>
+                    </div>
+                    <div class="camp-info">
+                        <h3>Dental Check-up Camp for All Ages</h3>
+                        <div class="camp-details">
+                            <p><i class="fas fa-map-marker-alt"></i> Government School, Kompally</p>
+                            <p><i class="fas fa-clock"></i> 9:00 AM - 3:00 PM</p>
+                            <p><i class="fas fa-user-md"></i> Dental Surgeons</p>
+                            <p><i class="fas fa-phone"></i> +91-9XXXXXX363</p>
+                        </div>
+                        <div class="camp-services">
+                            <span>Dental Check</span>
+                            <span>Cleaning</span>
+                            <span>Extraction</span>
+                            <span>Consultation</span>
+                        </div>
+                        <div class="camp-cta">
+                            <a href="https://wa.me/919XXXXXX363?text=I want to register for Dental Camp on Jan 5" class="btn btn-primary" target="_blank">
+                                <i class="fab fa-whatsapp"></i> Register Now
+                            </a>
+                            <a href="#" class="btn btn-secondary">
+                                <i class="fas fa-share-alt"></i> Share
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Camp 4 -->
+                <div class="camp-card-large animate-on-scroll" data-status="upcoming">
+                    <div class="camp-date-block">
+                        <div>
+                            <div class="day">15</div>
+                            <div class="month">Jan</div>
+                            <div class="year">2025</div>
+                        </div>
+                        <span class="camp-status upcoming">Upcoming</span>
+                    </div>
+                    <div class="camp-info">
+                        <h3>Women's Health Camp</h3>
+                        <div class="camp-details">
+                            <p><i class="fas fa-map-marker-alt"></i> Community Center, Alwal</p>
+                            <p><i class="fas fa-clock"></i> 10:00 AM - 5:00 PM</p>
+                            <p><i class="fas fa-user-md"></i> Gynecologists & General Physicians</p>
+                            <p><i class="fas fa-phone"></i> +91-9XXXXXX363</p>
+                        </div>
+                        <div class="camp-services">
+                            <span>Gynec Consultation</span>
+                            <span>Bone Density</span>
+                            <span>Anemia Check</span>
+                            <span>BP & Sugar</span>
+                        </div>
+                        <div class="camp-cta">
+                            <a href="https://wa.me/919XXXXXX363?text=I want to register for Women's Health Camp on Jan 15" class="btn btn-primary" target="_blank">
+                                <i class="fab fa-whatsapp"></i> Register Now
+                            </a>
+                            <a href="#" class="btn btn-secondary">
+                                <i class="fas fa-share-alt"></i> Share
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Past Camps Section -->
+    <section class="past-camps-section">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <span class="section-tag">History</span>
+                <h2 class="section-title">Past Health Camps</h2>
+                <div class="section-line"></div>
+            </div>
+            
+            <div class="past-camps-grid">
+                <div class="past-camp-card animate-on-scroll">
+                    <div class="past-camp-image">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <div class="past-camp-content">
+                        <h4>General Health Camp</h4>
+                        <p><i class="fas fa-calendar"></i> November 15, 2024</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Quthbullapur</p>
+                        <div class="past-camp-stats">
+                            <span><i class="fas fa-users"></i> 500+ Beneficiaries</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="past-camp-card animate-on-scroll">
+                    <div class="past-camp-image">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <div class="past-camp-content">
+                        <h4>Eye Care Camp</h4>
+                        <p><i class="fas fa-calendar"></i> October 20, 2024</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Balanagar</p>
+                        <div class="past-camp-stats">
+                            <span><i class="fas fa-users"></i> 350+ Beneficiaries</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="past-camp-card animate-on-scroll">
+                    <div class="past-camp-image">
+                        <i class="fas fa-tooth"></i>
+                    </div>
+                    <div class="past-camp-content">
+                        <h4>Dental Camp</h4>
+                        <p><i class="fas fa-calendar"></i> September 10, 2024</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Kompally</p>
+                        <div class="past-camp-stats">
+                            <span><i class="fas fa-users"></i> 280+ Beneficiaries</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section style="padding: 80px 0; background: linear-gradient(135deg, #ff6b35, #ff9933); text-align: center; color: white;">
+        <div class="container">
+            <h2 style="font-size: 36px; margin-bottom: 20px;">Want to Volunteer for Health Camps?</h2>
+            <p style="font-size: 18px; margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">Join our team of volunteers and make a difference in people's lives. Help us organize and conduct free health camps.</p>
+            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                <a href="../index.html#volunteer" class="btn" style="background: white; color: #ff6b35;">
+                    <i class="fas fa-hand-fist"></i> Become a Volunteer
+                </a>
+                <a href="https://wa.me/919XXXXXX363" class="btn" style="background: rgba(255,255,255,0.2); color: white; border: 2px solid white;" target="_blank">
+                    <i class="fab fa-whatsapp"></i> Contact Us
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <h3>B Kishore Reddy</h3>
+                    <p>Congress Leader & MLA Candidate for Quthbullapur Constituency. Through BKR Foundation, we provide healthcare to those in need.</p>
+                    <div class="footer-social">
+                        <a href="https://www.instagram.com/kishorereddy8925/" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.youtube.com/@BONGUNURIKISHOREREDDYOFFICIAL" target="_blank"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="../index.html#about">About</a></li>
+                        <li><a href="../index.html#journey">Political Journey</a></li>
+                        <li><a href="../index.html#initiatives">Initiatives</a></li>
+                        <li><a href="../index.html#agendas">Key Agendas</a></li>
+                        <li><a href="../index.html#gallery">Gallery</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Important</h4>
+                    <ul>
+                        <li><a href="complaint.html">File Complaint</a></li>
+                        <li><a href="feedback.html">Give Feedback</a></li>
+                        <li><a href="health-camps.html">Health Camps</a></li>
+                        <li><a href="../index.html#volunteer">Volunteer</a></li>
+                        <li><a href="../index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contact</h4>
+                    <p><i class="fas fa-map-marker-alt"></i> Quthbullapur, Telangana</p>
+                    <p><i class="fas fa-phone"></i> +91-9XXXXXX363</p>
+                    <p><i class="fas fa-envelope"></i> ranjith888999@gmail.com</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 B Kishore Reddy | BKR Foundation. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Buttons -->
+    <div class="floating-buttons">
+        <a href="https://wa.me/919XXXXXX363" class="fab-btn whatsapp" target="_blank" title="WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script>
+        // Load dynamic camps from localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCampsFromStorage();
+        });
+        
+        function loadCampsFromStorage() {
+            const camps = JSON.parse(localStorage.getItem('healthCamps') || '[]');
+            const grid = document.getElementById('campsGrid');
+            
+            camps.forEach(camp => {
+                const date = new Date(camp.date);
+                const day = date.getDate().toString().padStart(2, '0');
+                const month = date.toLocaleString('default', { month: 'short' });
+                const year = date.getFullYear();
+                
+                const campCard = document.createElement('div');
+                campCard.className = 'camp-card-large animate-on-scroll animated';
+                campCard.dataset.status = 'upcoming';
+                campCard.innerHTML = `
+                    <div class="camp-date-block">
+                        <div>
+                            <div class="day">${day}</div>
+                            <div class="month">${month}</div>
+                            <div class="year">${year}</div>
+                        </div>
+                        <span class="camp-status upcoming">Upcoming</span>
+                    </div>
+                    <div class="camp-info">
+                        <h3>${camp.title}</h3>
+                        <div class="camp-details">
+                            <p><i class="fas fa-map-marker-alt"></i> ${camp.location}</p>
+                            <p><i class="fas fa-clock"></i> ${camp.time}</p>
+                            <p><i class="fas fa-user-md"></i> Medical Professionals</p>
+                        </div>
+                        <div class="camp-services">
+                            <span>${camp.services || 'Free Check-up'}</span>
+                        </div>
+                        <div class="camp-cta">
+                            <a href="https://wa.me/919XXXXXX363?text=I want to register for ${camp.title}" class="btn btn-primary" target="_blank">
+                                <i class="fab fa-whatsapp"></i> Register Now
+                            </a>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(campCard);
+            });
+        }
+    </script>
+</body>
+</html>

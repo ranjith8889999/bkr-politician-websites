@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback | BKR Admin Panel</title>
+    <link rel="stylesheet" href="../../css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .star-rating {
+            color: #ffc107;
+            font-size: 1.2rem;
+        }
+        
+        .feedback-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--accent-orange);
+        }
+        
+        .feedback-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .feedback-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .feedback-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .feedback-meta h4 {
+            margin-bottom: 3px;
+        }
+        
+        .feedback-meta span {
+            font-size: 0.85rem;
+            color: #888;
+        }
+        
+        .feedback-content {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .feedback-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .avg-rating {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #ffc107, #ff9800);
+            padding: 10px 20px;
+            border-radius: 10px;
+            color: white;
+        }
+        
+        .avg-rating i {
+            font-size: 2rem;
+        }
+        
+        .avg-rating .rating-value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .avg-rating span {
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <h2>B<span>K</span>R</h2>
+                <p>Admin Panel</p>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="health-camps.html" class="nav-item">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>Health Camps</span>
+                </a>
+                <a href="gallery.html" class="nav-item">
+                    <i class="fas fa-images"></i>
+                    <span>Gallery</span>
+                </a>
+                <a href="news.html" class="nav-item">
+                    <i class="fas fa-newspaper"></i>
+                    <span>News & Updates</span>
+                </a>
+                <a href="complaints.html" class="nav-item">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span>Complaints</span>
+                </a>
+                <a href="feedback.html" class="nav-item active">
+                    <i class="fas fa-comment-dots"></i>
+                    <span>Feedback</span>
+                </a>
+                <a href="content.html" class="nav-item">
+                    <i class="fas fa-edit"></i>
+                    <span>Content</span>
+                </a>
+                <a href="settings.html" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="#" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <h1>Feedback Management</h1>
+                    <p>View and manage citizen feedback</p>
+                </div>
+                <div class="header-right">
+                    <button class="btn btn-outline" onclick="exportFeedback()">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                </div>
+            </header>
+            
+            <!-- Content -->
+            <div class="admin-content">
+                <!-- Stats -->
+                <div class="stats-grid" style="margin-bottom: 25px;">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalFeedback">0</h3>
+                            <p>Total Feedback</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="avg-rating">
+                            <i class="fas fa-star"></i>
+                            <div>
+                                <div class="rating-value" id="avgRating">0.0</div>
+                                <span>Avg. Rating</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #43e97b, #38f9d7);">
+                            <i class="fas fa-smile"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="positiveFeedback">0</h3>
+                            <p>Positive (4-5★)</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb, #f5576c);">
+                            <i class="fas fa-meh"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="negativeFeedback">0</h3>
+                            <p>Needs Improvement (1-3★)</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Filters -->
+                <div class="admin-card">
+                    <div class="card-body">
+                        <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" placeholder="Search feedback..." id="searchInput" onkeyup="filterFeedback()">
+                            </div>
+                            <select class="form-control" style="width: auto;" id="categoryFilter" onchange="filterFeedback()">
+                                <option value="">All Categories</option>
+                                <option value="service">Service Quality</option>
+                                <option value="response">Response Time</option>
+                                <option value="initiatives">Initiatives</option>
+                                <option value="general">General</option>
+                            </select>
+                            <select class="form-control" style="width: auto;" id="ratingFilter" onchange="filterFeedback()">
+                                <option value="">All Ratings</option>
+                                <option value="5">5 Stars</option>
+                                <option value="4">4 Stars</option>
+                                <option value="3">3 Stars</option>
+                                <option value="2">2 Stars</option>
+                                <option value="1">1 Star</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Feedback List -->
+                <div id="feedbackList">
+                    <div class="admin-card">
+                        <div class="card-body" style="text-align: center; padding: 40px;">
+                            <i class="fas fa-comments" style="font-size: 3rem; color: #ccc; margin-bottom: 15px;"></i>
+                            <h3 style="color: #888;">No feedback yet</h3>
+                            <p style="color: #aaa;">Feedback from citizens will appear here</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/admin.js"></script>
+    <script>
+        // Check authentication
+        if (localStorage.getItem('adminLoggedIn') !== 'true') {
+            window.location.href = 'login.html';
+        }
+        
+        function logout() {
+            localStorage.removeItem('adminLoggedIn');
+            localStorage.removeItem('adminUser');
+            window.location.href = 'login.html';
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFeedback();
+            updateStats();
+        });
+        
+        function loadFeedback(feedbackData = null) {
+            const container = document.getElementById('feedbackList');
+            const feedback = feedbackData || JSON.parse(localStorage.getItem('feedback') || '[]');
+            
+            if (feedback.length === 0) {
+                container.innerHTML = `
+                    <div class="admin-card">
+                        <div class="card-body" style="text-align: center; padding: 40px;">
+                            <i class="fas fa-comments" style="font-size: 3rem; color: #ccc; margin-bottom: 15px;"></i>
+                            <h3 style="color: #888;">No feedback yet</h3>
+                            <p style="color: #aaa;">Feedback from citizens will appear here</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = feedback.map(f => `
+                <div class="feedback-card">
+                    <div class="feedback-header">
+                        <div class="feedback-user">
+                            <div class="feedback-avatar">
+                                ${f.name ? f.name.charAt(0).toUpperCase() : 'U'}
+                            </div>
+                            <div class="feedback-meta">
+                                <h4>${f.name || 'Anonymous'}</h4>
+                                <span>${new Date(f.submittedAt).toLocaleDateString()} • ${f.category || 'General'}</span>
+                            </div>
+                        </div>
+                        <div class="star-rating">
+                            ${getStars(f.rating || 5)}
+                        </div>
+                    </div>
+                    <div class="feedback-content">
+                        ${f.feedback || f.message || 'No comment provided'}
+                    </div>
+                    <div class="feedback-footer">
+                        <span style="color: #888; font-size: 0.85rem;">
+                            <i class="fas fa-envelope"></i> ${f.email || 'N/A'}
+                        </span>
+                        <button class="btn btn-sm btn-danger" onclick="deleteFeedback(${f.id})">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function getStars(rating) {
+            let stars = '';
+            for (let i = 1; i <= 5; i++) {
+                stars += `<i class="fas fa-star" style="color: ${i <= rating ? '#ffc107' : '#ddd'}"></i>`;
+            }
+            return stars;
+        }
+        
+        function updateStats() {
+            const feedback = JSON.parse(localStorage.getItem('feedback') || '[]');
+            
+            document.getElementById('totalFeedback').textContent = feedback.length;
+            
+            if (feedback.length > 0) {
+                const avgRating = feedback.reduce((sum, f) => sum + (f.rating || 5), 0) / feedback.length;
+                document.getElementById('avgRating').textContent = avgRating.toFixed(1);
+                
+                document.getElementById('positiveFeedback').textContent = feedback.filter(f => (f.rating || 5) >= 4).length;
+                document.getElementById('negativeFeedback').textContent = feedback.filter(f => (f.rating || 5) < 4).length;
+            }
+        }
+        
+        function deleteFeedback(id) {
+            if (!confirm('Are you sure you want to delete this feedback?')) return;
+            
+            const feedback = JSON.parse(localStorage.getItem('feedback') || '[]');
+            const filtered = feedback.filter(f => f.id !== id);
+            localStorage.setItem('feedback', JSON.stringify(filtered));
+            
+            showNotification('Feedback deleted successfully!', 'success');
+            loadFeedback();
+            updateStats();
+        }
+        
+        function filterFeedback() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            const rating = document.getElementById('ratingFilter').value;
+            
+            const feedback = JSON.parse(localStorage.getItem('feedback') || '[]');
+            
+            const filtered = feedback.filter(f => {
+                const matchSearch = (f.name && f.name.toLowerCase().includes(search)) || 
+                                   (f.feedback && f.feedback.toLowerCase().includes(search));
+                const matchCategory = !category || f.category === category;
+                const matchRating = !rating || f.rating === parseInt(rating);
+                
+                return matchSearch && matchCategory && matchRating;
+            });
+            
+            loadFeedback(filtered);
+        }
+        
+        function exportFeedback() {
+            const feedback = JSON.parse(localStorage.getItem('feedback') || '[]');
+            
+            if (feedback.length === 0) {
+                showNotification('No feedback to export', 'warning');
+                return;
+            }
+            
+            const csv = [
+                ['ID', 'Name', 'Email', 'Category', 'Rating', 'Feedback', 'Date'].join(','),
+                ...feedback.map(f => [
+                    f.id.toString().slice(-6),
+                    `"${f.name || 'Anonymous'}"`,
+                    f.email || '',
+                    f.category || 'General',
+                    f.rating || 5,
+                    `"${(f.feedback || f.message || '').replace(/"/g, '""')}"`,
+                    new Date(f.submittedAt).toLocaleDateString()
+                ].join(','))
+            ].join('\n');
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `feedback_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            
+            showNotification('Feedback exported successfully!', 'success');
+        }
+    </script>
+</body>
+</html>

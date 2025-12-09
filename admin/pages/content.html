@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content | BKR Admin Panel</title>
+    <link rel="stylesheet" href="../../css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .content-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .content-tab {
+            padding: 12px 25px;
+            border: none;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .content-tab:hover,
+        .content-tab.active {
+            background: var(--accent-orange);
+            color: white;
+        }
+        
+        .content-section {
+            display: none;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        .content-editor {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .content-editor h3 {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .initiative-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+        
+        .initiative-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            background: var(--accent-orange);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .initiative-content {
+            flex: 1;
+        }
+        
+        .initiative-content h4 {
+            margin-bottom: 5px;
+        }
+        
+        .initiative-content p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .initiative-actions {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <h2>B<span>K</span>R</h2>
+                <p>Admin Panel</p>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="health-camps.html" class="nav-item">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>Health Camps</span>
+                </a>
+                <a href="gallery.html" class="nav-item">
+                    <i class="fas fa-images"></i>
+                    <span>Gallery</span>
+                </a>
+                <a href="news.html" class="nav-item">
+                    <i class="fas fa-newspaper"></i>
+                    <span>News & Updates</span>
+                </a>
+                <a href="complaints.html" class="nav-item">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span>Complaints</span>
+                </a>
+                <a href="feedback.html" class="nav-item">
+                    <i class="fas fa-comment-dots"></i>
+                    <span>Feedback</span>
+                </a>
+                <a href="content.html" class="nav-item active">
+                    <i class="fas fa-edit"></i>
+                    <span>Content</span>
+                </a>
+                <a href="settings.html" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="#" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <h1>Content Management</h1>
+                    <p>Edit website content and sections</p>
+                </div>
+            </header>
+            
+            <!-- Content -->
+            <div class="admin-content">
+                <!-- Tabs -->
+                <div class="content-tabs">
+                    <button class="content-tab active" onclick="showSection('hero')">
+                        <i class="fas fa-home"></i> Hero Section
+                    </button>
+                    <button class="content-tab" onclick="showSection('about')">
+                        <i class="fas fa-user"></i> About
+                    </button>
+                    <button class="content-tab" onclick="showSection('journey')">
+                        <i class="fas fa-route"></i> Journey
+                    </button>
+                    <button class="content-tab" onclick="showSection('initiatives')">
+                        <i class="fas fa-lightbulb"></i> Initiatives
+                    </button>
+                    <button class="content-tab" onclick="showSection('agendas')">
+                        <i class="fas fa-tasks"></i> Agendas
+                    </button>
+                    <button class="content-tab" onclick="showSection('contact')">
+                        <i class="fas fa-envelope"></i> Contact
+                    </button>
+                </div>
+                
+                <!-- Hero Section -->
+                <div class="content-section active" id="heroSection">
+                    <div class="content-editor">
+                        <h3><i class="fas fa-home"></i> Hero Section</h3>
+                        <form id="heroForm">
+                            <div class="form-group">
+                                <label>Tagline</label>
+                                <input type="text" class="form-control" name="tagline" value="Building a Better Tomorrow for Quthbullapur">
+                            </div>
+                            <div class="form-group">
+                                <label>Main Heading</label>
+                                <input type="text" class="form-control" name="heading" value="BONGUNURI KISHORE REDDY">
+                            </div>
+                            <div class="form-group">
+                                <label>Subtitle</label>
+                                <input type="text" class="form-control" name="subtitle" value="Congress MLA Candidate | Quthbullapur Constituency">
+                            </div>
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea class="form-control" name="description" rows="3">Dedicated to serving the people with integrity, transparency, and unwavering commitment to progress. Together, we will build a prosperous Quthbullapur.</textarea>
+                            </div>
+                            <button type="submit" class="btn btn-secondary">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- About Section -->
+                <div class="content-section" id="aboutSection">
+                    <div class="content-editor">
+                        <h3><i class="fas fa-user"></i> About Section</h3>
+                        <form id="aboutForm">
+                            <div class="form-group">
+                                <label>Section Title</label>
+                                <input type="text" class="form-control" name="title" value="About Kishore Reddy">
+                            </div>
+                            <div class="form-group">
+                                <label>Biography</label>
+                                <textarea class="form-control" name="bio" rows="6">Bongunuri Kishore Reddy is a dedicated social worker and politician who has devoted his life to the service of the people of Quthbullapur. With a vision of inclusive development and social justice, he has been at the forefront of numerous initiatives that have transformed the lives of thousands of families.</textarea>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Years of Service</label>
+                                    <input type="text" class="form-control" name="years" value="18+">
+                                </div>
+                                <div class="form-group">
+                                    <label>Families Helped</label>
+                                    <input type="text" class="form-control" name="families" value="50000+">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Health Camps</label>
+                                    <input type="text" class="form-control" name="camps" value="100+">
+                                </div>
+                                <div class="form-group">
+                                    <label>Communities Served</label>
+                                    <input type="text" class="form-control" name="communities" value="25+">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-secondary">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Journey Section -->
+                <div class="content-section" id="journeySection">
+                    <div class="content-editor">
+                        <h3><i class="fas fa-route"></i> Political Journey</h3>
+                        <p style="color: #888; margin-bottom: 20px;">Manage your political journey timeline. Add, edit, or remove milestones.</p>
+                        
+                        <div id="journeyList">
+                            <!-- Journey items will be loaded here -->
+                        </div>
+                        
+                        <button class="btn btn-secondary" data-modal="addJourneyModal">
+                            <i class="fas fa-plus"></i> Add Milestone
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Initiatives Section -->
+                <div class="content-section" id="initiativesSection">
+                    <div class="content-editor">
+                        <h3><i class="fas fa-lightbulb"></i> Key Initiatives</h3>
+                        <p style="color: #888; margin-bottom: 20px;">Manage your key initiatives and projects.</p>
+                        
+                        <div id="initiativesList">
+                            <!-- Initiatives will be loaded here -->
+                        </div>
+                        
+                        <button class="btn btn-secondary" data-modal="addInitiativeModal">
+                            <i class="fas fa-plus"></i> Add Initiative
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Agendas Section -->
+                <div class="content-section" id="agendasSection">
+                    <div class="content-editor">
+                        <h3><i class="fas fa-tasks"></i> Key Agendas</h3>
+                        <p style="color: #888; margin-bottom: 20px;">Define your key policy agendas and goals.</p>
+                        
+                        <div id="agendasList">
+                            <!-- Agendas will be loaded here -->
+                        </div>
+                        
+                        <button class="btn btn-secondary" data-modal="addAgendaModal">
+                            <i class="fas fa-plus"></i> Add Agenda
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Contact Section -->
+                <div class="content-section" id="contactSection">
+                    <div class="content-editor">
+                        <h3><i class="fas fa-envelope"></i> Contact Information</h3>
+                        <form id="contactForm">
+                            <div class="form-group">
+                                <label>Office Address</label>
+                                <textarea class="form-control" name="address" rows="2">Quthbullapur, Medchal-Malkajgiri District, Telangana</textarea>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Phone Number</label>
+                                    <input type="text" class="form-control" name="phone" value="+91-9XXXXXX363">
+                                </div>
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" class="form-control" name="email" value="ranjith888999@gmail.com">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Office Hours</label>
+                                <input type="text" class="form-control" name="hours" value="Monday - Saturday: 10:00 AM - 6:00 PM">
+                            </div>
+                            <h4 style="margin: 20px 0 15px;">Social Media Links</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label><i class="fab fa-instagram"></i> Instagram</label>
+                                    <input type="text" class="form-control" name="instagram" value="https://instagram.com/kishorereddy8925">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fab fa-youtube"></i> YouTube</label>
+                                    <input type="text" class="form-control" name="youtube" value="https://youtube.com/@BONGUNURIKISHOREREDDYOFFICIAL">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label><i class="fab fa-facebook"></i> Facebook</label>
+                                    <input type="text" class="form-control" name="facebook" value="">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fab fa-twitter"></i> Twitter</label>
+                                    <input type="text" class="form-control" name="twitter" value="">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-secondary">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Journey Modal -->
+    <div class="modal-overlay" id="addJourneyModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Add Journey Milestone</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="journeyForm">
+                    <div class="form-group">
+                        <label>Year *</label>
+                        <input type="text" class="form-control" name="year" placeholder="e.g., 2006" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Title *</label>
+                        <input type="text" class="form-control" name="title" placeholder="e.g., Started Political Journey" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Description *</label>
+                        <textarea class="form-control" name="description" rows="3" placeholder="Describe the milestone..." required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline modal-cancel">Cancel</button>
+                <button type="submit" form="journeyForm" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> Add Milestone
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Initiative Modal -->
+    <div class="modal-overlay" id="addInitiativeModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Add Initiative</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="initiativeForm">
+                    <div class="form-group">
+                        <label>Title *</label>
+                        <input type="text" class="form-control" name="title" placeholder="e.g., Education Support" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Icon (Font Awesome class) *</label>
+                        <input type="text" class="form-control" name="icon" placeholder="e.g., fa-graduation-cap" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Description *</label>
+                        <textarea class="form-control" name="description" rows="3" placeholder="Describe the initiative..." required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline modal-cancel">Cancel</button>
+                <button type="submit" form="initiativeForm" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> Add Initiative
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Agenda Modal -->
+    <div class="modal-overlay" id="addAgendaModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Add Agenda</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="agendaForm">
+                    <div class="form-group">
+                        <label>Title *</label>
+                        <input type="text" class="form-control" name="title" placeholder="e.g., Infrastructure Development" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Icon (Font Awesome class) *</label>
+                        <input type="text" class="form-control" name="icon" placeholder="e.g., fa-road" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Description *</label>
+                        <textarea class="form-control" name="description" rows="3" placeholder="Describe the agenda..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Key Points (one per line)</label>
+                        <textarea class="form-control" name="points" rows="3" placeholder="Point 1&#10;Point 2&#10;Point 3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline modal-cancel">Cancel</button>
+                <button type="submit" form="agendaForm" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> Add Agenda
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../js/admin.js"></script>
+    <script>
+        // Check authentication
+        if (localStorage.getItem('adminLoggedIn') !== 'true') {
+            window.location.href = 'login.html';
+        }
+        
+        function logout() {
+            localStorage.removeItem('adminLoggedIn');
+            localStorage.removeItem('adminUser');
+            window.location.href = 'login.html';
+        }
+        
+        // Tab navigation
+        function showSection(section) {
+            // Update tabs
+            document.querySelectorAll('.content-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update sections
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(section + 'Section').classList.add('active');
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            loadContent();
+            loadJourney();
+            loadInitiatives();
+            loadAgendas();
+        });
+        
+        function loadContent() {
+            const content = JSON.parse(localStorage.getItem('websiteContent') || '{}');
+            
+            // Load hero content
+            if (content.hero) {
+                const heroForm = document.getElementById('heroForm');
+                if (content.hero.tagline) heroForm.tagline.value = content.hero.tagline;
+                if (content.hero.heading) heroForm.heading.value = content.hero.heading;
+                if (content.hero.subtitle) heroForm.subtitle.value = content.hero.subtitle;
+                if (content.hero.description) heroForm.description.value = content.hero.description;
+            }
+            
+            // Load about content
+            if (content.about) {
+                const aboutForm = document.getElementById('aboutForm');
+                if (content.about.title) aboutForm.title.value = content.about.title;
+                if (content.about.bio) aboutForm.bio.value = content.about.bio;
+                if (content.about.years) aboutForm.years.value = content.about.years;
+                if (content.about.families) aboutForm.families.value = content.about.families;
+                if (content.about.camps) aboutForm.camps.value = content.about.camps;
+                if (content.about.communities) aboutForm.communities.value = content.about.communities;
+            }
+            
+            // Load contact content
+            if (content.contact) {
+                const contactForm = document.getElementById('contactForm');
+                if (content.contact.address) contactForm.address.value = content.contact.address;
+                if (content.contact.phone) contactForm.phone.value = content.contact.phone;
+                if (content.contact.email) contactForm.email.value = content.contact.email;
+                if (content.contact.hours) contactForm.hours.value = content.contact.hours;
+                if (content.contact.instagram) contactForm.instagram.value = content.contact.instagram;
+                if (content.contact.youtube) contactForm.youtube.value = content.contact.youtube;
+                if (content.contact.facebook) contactForm.facebook.value = content.contact.facebook;
+                if (content.contact.twitter) contactForm.twitter.value = content.contact.twitter;
+            }
+        }
+        
+        function loadJourney() {
+            const container = document.getElementById('journeyList');
+            const journey = JSON.parse(localStorage.getItem('journey') || '[]');
+            
+            if (journey.length === 0) {
+                container.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">No milestones added yet.</p>';
+                return;
+            }
+            
+            container.innerHTML = journey.map(j => `
+                <div class="initiative-card">
+                    <div class="initiative-icon">
+                        ${j.year}
+                    </div>
+                    <div class="initiative-content">
+                        <h4>${j.title}</h4>
+                        <p>${j.description}</p>
+                    </div>
+                    <div class="initiative-actions">
+                        <button class="btn btn-sm btn-danger" onclick="deleteJourney(${j.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function loadInitiatives() {
+            const container = document.getElementById('initiativesList');
+            const initiatives = JSON.parse(localStorage.getItem('initiatives') || '[]');
+            
+            if (initiatives.length === 0) {
+                container.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">No initiatives added yet.</p>';
+                return;
+            }
+            
+            container.innerHTML = initiatives.map(i => `
+                <div class="initiative-card">
+                    <div class="initiative-icon">
+                        <i class="fas ${i.icon}"></i>
+                    </div>
+                    <div class="initiative-content">
+                        <h4>${i.title}</h4>
+                        <p>${i.description}</p>
+                    </div>
+                    <div class="initiative-actions">
+                        <button class="btn btn-sm btn-danger" onclick="deleteInitiative(${i.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function loadAgendas() {
+            const container = document.getElementById('agendasList');
+            const agendas = JSON.parse(localStorage.getItem('agendas') || '[]');
+            
+            if (agendas.length === 0) {
+                container.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">No agendas added yet.</p>';
+                return;
+            }
+            
+            container.innerHTML = agendas.map(a => `
+                <div class="initiative-card">
+                    <div class="initiative-icon">
+                        <i class="fas ${a.icon}"></i>
+                    </div>
+                    <div class="initiative-content">
+                        <h4>${a.title}</h4>
+                        <p>${a.description}</p>
+                    </div>
+                    <div class="initiative-actions">
+                        <button class="btn btn-sm btn-danger" onclick="deleteAgenda(${a.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Form submissions
+        document.getElementById('heroForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            saveContent('hero', Object.fromEntries(new FormData(e.target)));
+        });
+        
+        document.getElementById('aboutForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            saveContent('about', Object.fromEntries(new FormData(e.target)));
+        });
+        
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            saveContent('contact', Object.fromEntries(new FormData(e.target)));
+        });
+        
+        function saveContent(section, data) {
+            const content = JSON.parse(localStorage.getItem('websiteContent') || '{}');
+            content[section] = data;
+            localStorage.setItem('websiteContent', JSON.stringify(content));
+            showNotification(`${section.charAt(0).toUpperCase() + section.slice(1)} section saved successfully!`, 'success');
+        }
+        
+        document.getElementById('journeyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const data = Object.fromEntries(new FormData(e.target));
+            const journey = JSON.parse(localStorage.getItem('journey') || '[]');
+            journey.push({ id: Date.now(), ...data });
+            localStorage.setItem('journey', JSON.stringify(journey));
+            showNotification('Milestone added successfully!', 'success');
+            e.target.reset();
+            document.getElementById('addJourneyModal').classList.remove('active');
+            loadJourney();
+        });
+        
+        document.getElementById('initiativeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const data = Object.fromEntries(new FormData(e.target));
+            const initiatives = JSON.parse(localStorage.getItem('initiatives') || '[]');
+            initiatives.push({ id: Date.now(), ...data });
+            localStorage.setItem('initiatives', JSON.stringify(initiatives));
+            showNotification('Initiative added successfully!', 'success');
+            e.target.reset();
+            document.getElementById('addInitiativeModal').classList.remove('active');
+            loadInitiatives();
+        });
+        
+        document.getElementById('agendaForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const data = Object.fromEntries(new FormData(e.target));
+            const agendas = JSON.parse(localStorage.getItem('agendas') || '[]');
+            agendas.push({ id: Date.now(), ...data });
+            localStorage.setItem('agendas', JSON.stringify(agendas));
+            showNotification('Agenda added successfully!', 'success');
+            e.target.reset();
+            document.getElementById('addAgendaModal').classList.remove('active');
+            loadAgendas();
+        });
+        
+        function deleteJourney(id) {
+            if (!confirm('Delete this milestone?')) return;
+            const journey = JSON.parse(localStorage.getItem('journey') || '[]');
+            localStorage.setItem('journey', JSON.stringify(journey.filter(j => j.id !== id)));
+            showNotification('Milestone deleted!', 'success');
+            loadJourney();
+        }
+        
+        function deleteInitiative(id) {
+            if (!confirm('Delete this initiative?')) return;
+            const initiatives = JSON.parse(localStorage.getItem('initiatives') || '[]');
+            localStorage.setItem('initiatives', JSON.stringify(initiatives.filter(i => i.id !== id)));
+            showNotification('Initiative deleted!', 'success');
+            loadInitiatives();
+        }
+        
+        function deleteAgenda(id) {
+            if (!confirm('Delete this agenda?')) return;
+            const agendas = JSON.parse(localStorage.getItem('agendas') || '[]');
+            localStorage.setItem('agendas', JSON.stringify(agendas.filter(a => a.id !== id)));
+            showNotification('Agenda deleted!', 'success');
+            loadAgendas();
+        }
+    </script>
+</body>
+</html>
