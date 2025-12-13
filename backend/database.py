@@ -27,15 +27,24 @@ class Database:
     
     # ==================== HEALTH CAMPS ====================
     
-    def get_health_camps(self, status=None, limit=None):
-        """Get all health camps or filter by status"""
+    def get_health_camps(self, status=None, limit=None, upcoming=None):
+        """Get all health camps or filter by status/upcoming"""
         conn = self.get_connection()
         cursor = conn.cursor()
         
-        if status:
+        # Get today's date in YYYY-MM-DD format for comparison
+        from datetime import date
+        today = date.today().isoformat()
+        
+        if upcoming:
+            # Filter for upcoming camps (date >= today)
+            query = "SELECT * FROM health_camps WHERE date >= ? ORDER BY date ASC"
+            cursor.execute(query, (today,))
+        elif status:
             query = "SELECT * FROM health_camps WHERE status = ? ORDER BY date DESC"
             cursor.execute(query, (status,))
         else:
+            # All camps sorted by date descending (newest/upcoming first)
             query = "SELECT * FROM health_camps ORDER BY date DESC"
             if limit:
                 query += f" LIMIT {limit}"

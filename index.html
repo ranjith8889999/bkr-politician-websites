@@ -854,20 +854,11 @@
             if (!container) return;
             
             try {
-                // Fetch all camps from API, then filter upcoming on client side
-                const response = await HealthCampsAPI.getAll();
+                // Fetch upcoming camps from API (date >= today)
+                const response = await HealthCampsAPI.getUpcoming();
                 
                 if (response.success && response.data.length > 0) {
-                    // Filter upcoming camps (date >= today)
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
-                    
-                    const upcomingCamps = response.data.filter(camp => {
-                        const campDate = new Date(camp.date);
-                        return campDate >= today || camp.status === 'upcoming';
-                    });
-                    
-                    const camps = upcomingCamps.slice(0, 3); // Show only first 3 camps
+                    const camps = response.data.slice(0, 3); // Show only first 3 upcoming camps
                     
                     if (camps.length > 0) {
                         // Clear placeholder content

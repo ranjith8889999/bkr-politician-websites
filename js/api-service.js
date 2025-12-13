@@ -106,6 +106,13 @@ const HealthCampsAPI = {
     },
     
     /**
+     * Get upcoming health camps (date >= today)
+     */
+    async getUpcoming() {
+        return await apiRequest('/health-camps?upcoming=true');
+    },
+    
+    /**
      * Get a single health camp
      */
     async getById(id) {

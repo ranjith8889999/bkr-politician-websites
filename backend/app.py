@@ -90,12 +90,16 @@ def health_check():
 
 @app.route('/api/health-camps', methods=['GET'])
 def get_health_camps():
-    """Get all health camps or filter by status"""
+    """Get all health camps or filter by status/upcoming"""
     try:
         status = request.args.get('status')
         limit = request.args.get('limit', type=int)
+        upcoming = request.args.get('upcoming', type=str)
         
-        camps = db.get_health_camps(status=status, limit=limit)
+        # Convert 'true'/'false' string to boolean
+        upcoming_bool = upcoming.lower() == 'true' if upcoming else None
+        
+        camps = db.get_health_camps(status=status, limit=limit, upcoming=upcoming_bool)
         
         return jsonify({
             'success': True,

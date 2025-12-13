@@ -652,12 +652,31 @@
     <script src="../js/api-service.js"></script>
     <script src="../js/main.js"></script>
     <script>
+        // Filter state
+        let currentFilter = 'upcoming';
+        
         // Load dynamic camps from API
         document.addEventListener('DOMContentLoaded', async function() {
-            await loadCampsFromAPI();
+            await loadCampsFromAPI('upcoming');
+            
+            // Setup filter buttons
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', async function() {
+                    const filter = this.dataset.filter;
+                    currentFilter = filter;
+                    
+                    // Update active state
+                    filterButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Reload camps with filter
+                    await loadCampsFromAPI(filter);
+                });
+            });
         });
         
-        async function loadCampsFromAPI() {
+        async function loadCampsFromAPI(filter = 'upcoming') {
             const grid = document.getElementById('campsGrid');
             if (!grid) return;
             
@@ -665,8 +684,10 @@
             grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 60px;"><i class="fas fa-spinner fa-spin" style="font-size: 48px; color: #1e3a5f;"></i><p style="margin-top: 20px; font-size: 18px; color: #666;">Loading health camps...</p></div>';
             
             try {
-                // Fetch all camps from API
-                const response = await HealthCampsAPI.getAll();
+                // Fetch camps based on filter
+                const response = filter === 'upcoming' 
+                    ? await HealthCampsAPI.getUpcoming() 
+                    : await HealthCampsAPI.getAll();
                 
                 if (response.success) {
                     const camps = response.data;
@@ -679,9 +700,7 @@
                     // Clear loading message
                     grid.innerHTML = '';
                     
-                    // Sort camps by date (newest first)
-                    camps.sort((a, b) => new Date(b.date) - new Date(a.date));
-                    
+                    // Backend already sorts: upcoming=ASC, all=DESC (newest first)
                     camps.forEach(camp => {
                         const date = new Date(camp.date);
                         const day = date.getDate().toString().padStart(2, '0');
