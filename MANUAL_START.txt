@@ -1,0 +1,146 @@
+============================================
+BKR WEBSITE - MANUAL STARTUP COMMANDS
+============================================
+
+OPTION 1: AUTOMATED STARTUP (Easiest)
+--------------------------------------
+Double-click: START.bat
+
+This will:
+✓ Install dependencies
+✓ Create database
+✓ Start both servers
+✓ Open website
+
+
+OPTION 2: MANUAL STARTUP
+--------------------------------------
+
+Step 1: Install Dependencies (First time only)
+-----------------------------------------------
+cd backend
+pip install -r requirements.txt
+
+
+Step 2: Create Database with Sample Data (First time only)
+-----------------------------------------------------------
+cd backend
+python migrate_data.py --sample
+
+
+Step 3: Start Backend Server
+-----------------------------
+Open PowerShell Terminal 1:
+cd backend
+python app.py
+
+Keep this terminal running!
+Backend API will be available at: http://localhost:5000
+
+
+Step 4: Start Frontend Server
+------------------------------
+Open PowerShell Terminal 2:
+python -m http.server 8080
+
+Keep this terminal running!
+Frontend will be available at: http://localhost:8080
+
+
+Step 5: Open Website
+---------------------
+Open browser and go to:
+http://localhost:8080
+
+Admin Panel:
+http://localhost:8080/admin/pages/login.html
+
+Login Credentials:
+  Username: admin
+  Password: admin123
+
+
+============================================
+TROUBLESHOOTING
+============================================
+
+Problem: Port already in use
+----------------------------
+# Kill process on port 5000
+netstat -ano | findstr :5000
+taskkill /PID <process_id> /F
+
+# Kill process on port 8080
+netstat -ano | findstr :8080
+taskkill /PID <process_id> /F
+
+
+Problem: Database errors
+-------------------------
+Delete and recreate database:
+cd backend
+del bkr_database.db
+python migrate_data.py --sample
+
+
+Problem: API not responding
+----------------------------
+1. Make sure Flask server is running (check Terminal 1)
+2. Check if you see "Running on http://127.0.0.1:5000"
+3. Open http://localhost:5000/api/health to test
+
+
+Problem: Frontend not loading data
+-----------------------------------
+1. Press F12 in browser (DevTools)
+2. Check Console tab for errors
+3. Make sure backend server is running
+4. Check if api-service.js is loaded
+
+
+============================================
+FILE STRUCTURE
+============================================
+
+bkr4/
+├── backend/
+│   ├── app.py              ← Flask API Server
+│   ├── database.py         ← Database operations
+│   ├── bkr_database.db     ← SQLite database (auto-created)
+│   ├── requirements.txt    ← Python dependencies
+│   └── .env                ← Configuration
+├── js/
+│   ├── api-service.js      ← API client
+│   └── admin.js            ← Admin panel
+├── index.html              ← Homepage
+├── START.bat               ← Automated startup
+└── MANUAL_START.txt        ← This file
+
+
+============================================
+IMPORTANT PORTS
+============================================
+
+Port 5000 - Flask Backend API
+Port 8080 - Frontend Website
+
+Both must be running for the website to work!
+
+
+============================================
+ADMIN PANEL FEATURES
+============================================
+
+✓ Manage Health Camps
+✓ View Complaints
+✓ View Feedback
+✓ Manage News
+✓ Dashboard Statistics
+
+
+============================================
+SUPPORT
+============================================
+
+Email: ranjith888999@gmail.com
+Phone: +91-9XXXXXX363

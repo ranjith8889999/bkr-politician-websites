@@ -182,27 +182,32 @@ function initForms() {
     }
 }
 
-function handleHealthCampSubmit(e) {
+async function handleHealthCampSubmit(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
     
-    // Get existing camps from localStorage
-    const camps = JSON.parse(localStorage.getItem('healthCamps') || '[]');
+    // Add default status if not provided
+    if (!data.status) {
+        data.status = 'upcoming';
+    }
     
-    // Add new camp
-    camps.push({
-        id: Date.now(),
-        ...data,
-        status: 'upcoming'
-    });
-    
-    localStorage.setItem('healthCamps', JSON.stringify(camps));
-    
-    showNotification('Health camp added successfully!', 'success');
-    e.target.reset();
-    closeModal(e.target.closest('.modal-overlay'));
-    loadHealthCamps();
+    try {
+        // Call API to create health camp
+        const response = await HealthCampsAPI.create(data);
+        
+        if (response.success) {
+            showNotification('Health camp added successfully!', 'success');
+            e.target.reset();
+            closeModal(e.target.closest('.modal-overlay'));
+            loadHealthCamps();
+        } else {
+            showNotification(response.error || 'Failed to add health camp', 'error');
+        }
+    } catch (error) {
+        console.error('Error creating health camp:', error);
+        showNotification('Error: ' + error.message, 'error');
+    }
 }
 
 function handleGallerySubmit(e) {
@@ -246,41 +251,67 @@ function initDataTables() {
     loadFeedback();
 }
 
-function loadHealthCamps() {
+async function loadHealthCamps() {
     const container = document.getElementById('healthCampsTable');
     if (!container) return;
     
-    const camps = JSON.parse(localStorage.getItem('healthCamps') || '[]');
+    // Show loading state
+    showLoading('healthCampsTable');
     
-    if (camps.length === 0) {
-        container.innerHTML = '<tr><td colspan="6" style="text-align:center;">No health camps found</td></tr>';
-        return;
+    try {
+        // Fetch camps from API
+        const response = await HealthCampsAPI.getAll();
+        
+        if (response.success) {
+            const camps = response.data;
+            
+            if (camps.length === 0) {
+                container.innerHTML = '<tr><td colspan="6" style="text-align:center;">No health camps found. Add a new camp to get started.</td></tr>';
+                return;
+            }
+            
+            container.innerHTML = camps.map(camp => `
+                <tr>
+                    <td><strong>${camp.title || 'N/A'}</strong></td>
+                    <td>${camp.date || 'N/A'}</td>
+                    <td>${camp.location || 'N/A'}</td>
+                    <td>${camp.time || 'N/A'}</td>
+                    <td><span class="badge badge-${camp.status === 'upcoming' ? 'success' : 'info'}">${camp.status || 'upcoming'}</span></td>
+                    <td class="actions">
+                        <button class="btn btn-sm btn-primary" onclick="editCamp(${camp.id})" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteCamp(${camp.id})" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        } else {
+            showError('healthCampsTable', response.error || 'Failed to load health camps');
+        }
+    } catch (error) {
+        console.error('Error loading health camps:', error);
+        showError('healthCampsTable', 'Unable to connect to server. Please check if the API is running.');
     }
-    
-    container.innerHTML = camps.map(camp => `
-        <tr>
-            <td>${camp.title || 'N/A'}</td>
-            <td>${camp.date || 'N/A'}</td>
-            <td>${camp.location || 'N/A'}</td>
-            <td>${camp.time || 'N/A'}</td>
-            <td><span class="badge badge-${camp.status === 'upcoming' ? 'success' : 'info'}">${camp.status || 'upcoming'}</span></td>
-            <td class="actions">
-                <button class="btn btn-sm btn-primary" onclick="editCamp(${camp.id})"><i class="fas fa-edit"></i></button>
-                <button class="btn btn-sm btn-danger" onclick="deleteCamp(${camp.id})"><i class="fas fa-trash"></i></button>
-            </td>
-        </tr>
-    `).join('');
 }
 
-function deleteCamp(id) {
+async function deleteCamp(id) {
     if (!confirm('Are you sure you want to delete this health camp?')) return;
     
-    const camps = JSON.parse(localStorage.getItem('healthCamps') || '[]');
-    const filtered = camps.filter(c => c.id !== id);
-    localStorage.setItem('healthCamps', JSON.stringify(filtered));
-    
-    showNotification('Health camp deleted successfully!', 'success');
-    loadHealthCamps();
+    try {
+        const response = await HealthCampsAPI.delete(id);
+        
+        if (response.success) {
+            showNotification('Health camp deleted successfully!', 'success');
+            loadHealthCamps();
+        } else {
+            showNotification(response.error || 'Failed to delete health camp', 'error');
+        }
+    } catch (error) {
+        console.error('Error deleting health camp:', error);
+        showNotification('Error: ' + error.message, 'error');
+    }
 }
 
 function loadComplaints() {
@@ -346,16 +377,30 @@ function getStatusBadge(status) {
 // =============================================
 // DASHBOARD DATA
 // =============================================
-function loadDashboardData() {
-    const complaints = JSON.parse(localStorage.getItem('complaints') || '[]');
-    const feedback = JSON.parse(localStorage.getItem('feedback') || '[]');
-    const healthCamps = JSON.parse(localStorage.getItem('healthCamps') || '[]');
-    
-    // Update stat cards
-    updateStat('totalComplaints', complaints.length);
-    updateStat('totalFeedback', feedback.length);
-    updateStat('totalCamps', healthCamps.length);
-    updateStat('pendingComplaints', complaints.filter(c => c.status === 'pending').length);
+async function loadDashboardData() {
+    try {
+        // Try to load from API first
+        const response = await DashboardAPI.getStats();
+        
+        if (response.success) {
+            const stats = response.data;
+            updateStat('totalComplaints', stats.total_complaints || 0);
+            updateStat('totalFeedback', stats.total_feedback || 0);
+            updateStat('totalCamps', stats.total_camps || 0);
+            updateStat('pendingComplaints', stats.pending_complaints || 0);
+        }
+    } catch (error) {
+        console.warn('Could not load stats from API, using localStorage fallback:', error);
+        // Fallback to localStorage if API is not available
+        const complaints = JSON.parse(localStorage.getItem('complaints') || '[]');
+        const feedback = JSON.parse(localStorage.getItem('feedback') || '[]');
+        const healthCamps = JSON.parse(localStorage.getItem('healthCamps') || '[]');
+        
+        updateStat('totalComplaints', complaints.length);
+        updateStat('totalFeedback', feedback.length);
+        updateStat('totalCamps', healthCamps.length);
+        updateStat('pendingComplaints', complaints.filter(c => c.status === 'pending').length);
+    }
 }
 
 function updateStat(id, value) {

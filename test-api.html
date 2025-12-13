@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Test</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .result { background: #f0f0f0; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>BKR API Test Page</h1>
+    
+    <button onclick="testHealth()">1. Test Health Endpoint</button>
+    <button onclick="getCamps()">2. Get All Camps</button>
+    <button onclick="createCamp()">3. Create Test Camp</button>
+    
+    <div id="results"></div>
+
+    <script>
+        const API_URL = 'http://localhost:5000/api';
+        const API_KEY = 'bkr-secret-key-2025-change-in-production';
+        
+        function log(message, isError = false) {
+            const div = document.createElement('div');
+            div.className = 'result ' + (isError ? 'error' : 'success');
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}</strong><br>${message}`;
+            document.getElementById('results').prepend(div);
+        }
+        
+        async function testHealth() {
+            try {
+                const response = await fetch(`${API_URL}/health`);
+                const data = await response.json();
+                log(`✅ Health Check: ${JSON.stringify(data, null, 2)}`);
+            } catch (error) {
+                log(`❌ Health Check Failed: ${error.message}`, true);
+            }
+        }
+        
+        async function getCamps() {
+            try {
+                const response = await fetch(`${API_URL}/health-camps`);
+                const data = await response.json();
+                log(`✅ Got ${data.count} camps:<br><pre>${JSON.stringify(data.data, null, 2)}</pre>`);
+            } catch (error) {
+                log(`❌ Get Camps Failed: ${error.message}`, true);
+            }
+        }
+        
+        async function createCamp() {
+            try {
+                const campData = {
+                    title: "Browser Test Camp " + Date.now(),
+                    date: "2025-12-30",
+                    time: "10:00 AM - 4:00 PM",
+                    location: "Test Location",
+                    services: "Testing",
+                    description: "Created from test page",
+                    contact: "+91-1234567890",
+                    status: "upcoming"
+                };
+                
+                const response = await fetch(`${API_URL}/health-camps`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-Key': API_KEY
+                    },
+                    body: JSON.stringify(campData)
+                });
+                
+                const data = await response.json();
+                log(`✅ Created Camp: ${JSON.stringify(data, null, 2)}`);
+            } catch (error) {
+                log(`❌ Create Camp Failed: ${error.message}`, true);
+            }
+        }
+    </script>
+</body>
+</html>

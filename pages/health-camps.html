@@ -513,8 +513,13 @@
             
             <!-- Camps Grid -->
             <div class="camps-grid" id="campsGrid">
-                <!-- Camp 1 -->
-                <div class="camp-card-large animate-on-scroll" data-status="upcoming">
+                <!-- Loading... Dynamic content will load here -->
+                <div style="grid-column: 1/-1; text-align: center; padding: 60px;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 48px; color: #1e3a5f;"></i>
+                    <p style="margin-top: 20px; font-size: 18px; color: #666;">Loading health camps...</p>
+                </div>
+                <!-- OLD STATIC CONTENT REMOVED - NOW LOADS FROM DATABASE -->
+                <!--<div class="camp-card-large animate-on-scroll" data-status="upcoming">
                     <div class="camp-date-block">
                         <div>
                             <div class="day">15</div>
@@ -617,42 +622,7 @@
                             </a>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Camp 4 -->
-                <div class="camp-card-large animate-on-scroll" data-status="upcoming">
-                    <div class="camp-date-block">
-                        <div>
-                            <div class="day">15</div>
-                            <div class="month">Jan</div>
-                            <div class="year">2025</div>
-                        </div>
-                        <span class="camp-status upcoming">Upcoming</span>
-                    </div>
-                    <div class="camp-info">
-                        <h3>Women's Health Camp</h3>
-                        <div class="camp-details">
-                            <p><i class="fas fa-map-marker-alt"></i> Community Center, Alwal</p>
-                            <p><i class="fas fa-clock"></i> 10:00 AM - 5:00 PM</p>
-                            <p><i class="fas fa-user-md"></i> Gynecologists & General Physicians</p>
-                            <p><i class="fas fa-phone"></i> +91-9XXXXXX363</p>
-                        </div>
-                        <div class="camp-services">
-                            <span>Gynec Consultation</span>
-                            <span>Bone Density</span>
-                            <span>Anemia Check</span>
-                            <span>BP & Sugar</span>
-                        </div>
-                        <div class="camp-cta">
-                            <a href="https://wa.me/919XXXXXX363?text=I want to register for Women's Health Camp on Jan 15" class="btn btn-primary" target="_blank">
-                                <i class="fab fa-whatsapp"></i> Register Now
-                            </a>
-                            <a href="#" class="btn btn-secondary">
-                                <i class="fas fa-share-alt"></i> Share
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                </div>-->
             </div>
         </div>
     </section>
@@ -782,54 +752,105 @@
         </a>
     </div>
 
+    <script src="../js/api-service.js"></script>
     <script src="../js/main.js"></script>
     <script>
-        // Load dynamic camps from localStorage
-        document.addEventListener('DOMContentLoaded', function() {
-            loadCampsFromStorage();
+        // Load dynamic camps from API
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadCampsFromAPI();
         });
         
-        function loadCampsFromStorage() {
-            const camps = JSON.parse(localStorage.getItem('healthCamps') || '[]');
+        async function loadCampsFromAPI() {
             const grid = document.getElementById('campsGrid');
+            if (!grid) return;
             
-            camps.forEach(camp => {
-                const date = new Date(camp.date);
-                const day = date.getDate().toString().padStart(2, '0');
-                const month = date.toLocaleString('default', { month: 'short' });
-                const year = date.getFullYear();
+            // Show loading
+            grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 60px;"><i class="fas fa-spinner fa-spin" style="font-size: 48px; color: #1e3a5f;"></i><p style="margin-top: 20px; font-size: 18px; color: #666;">Loading health camps...</p></div>';
+            
+            try {
+                // Fetch all camps from API
+                const response = await HealthCampsAPI.getAll();
                 
-                const campCard = document.createElement('div');
-                campCard.className = 'camp-card-large animate-on-scroll animated';
-                campCard.dataset.status = 'upcoming';
-                campCard.innerHTML = `
-                    <div class="camp-date-block">
-                        <div>
-                            <div class="day">${day}</div>
-                            <div class="month">${month}</div>
-                            <div class="year">${year}</div>
-                        </div>
-                        <span class="camp-status upcoming">Upcoming</span>
-                    </div>
-                    <div class="camp-info">
-                        <h3>${camp.title}</h3>
-                        <div class="camp-details">
-                            <p><i class="fas fa-map-marker-alt"></i> ${camp.location}</p>
-                            <p><i class="fas fa-clock"></i> ${camp.time}</p>
-                            <p><i class="fas fa-user-md"></i> Medical Professionals</p>
-                        </div>
-                        <div class="camp-services">
-                            <span>${camp.services || 'Free Check-up'}</span>
-                        </div>
-                        <div class="camp-cta">
-                            <a href="https://wa.me/919XXXXXX363?text=I want to register for ${camp.title}" class="btn btn-primary" target="_blank">
-                                <i class="fab fa-whatsapp"></i> Register Now
-                            </a>
-                        </div>
+                if (response.success) {
+                    const camps = response.data;
+                    
+                    if (camps.length === 0) {
+                        grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 60px;"><i class="fas fa-calendar-times" style="font-size: 48px; color: #ff6b35;"></i><p style="margin-top: 20px; font-size: 18px; color: #666;">No health camps scheduled at the moment.</p><p style="color: #888;">Check back soon for upcoming health camps!</p></div>';
+                        return;
+                    }
+                    
+                    // Clear loading message
+                    grid.innerHTML = '';
+                    
+                    // Sort camps by date (newest first)
+                    camps.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    
+                    camps.forEach(camp => {
+                        const date = new Date(camp.date);
+                        const day = date.getDate().toString().padStart(2, '0');
+                        const month = date.toLocaleString('default', { month: 'short' });
+                        const year = date.getFullYear();
+                        
+                        // Determine if camp is upcoming or completed
+                        const today = new Date();
+                        const campDate = new Date(camp.date);
+                        const status = campDate >= today ? 'upcoming' : 'completed';
+                        
+                        const campCard = document.createElement('div');
+                        campCard.className = 'camp-card-large animate-on-scroll animated';
+                        campCard.dataset.status = status;
+                        campCard.innerHTML = `
+                            <div class="camp-date-block">
+                                <div>
+                                    <div class="day">${day}</div>
+                                    <div class="month">${month}</div>
+                                    <div class="year">${year}</div>
+                                </div>
+                                <span class="camp-status ${status}">${status === 'upcoming' ? 'Upcoming' : 'Completed'}</span>
+                            </div>
+                            <div class="camp-info">
+                                <h3>${camp.title}</h3>
+                                <div class="camp-details">
+                                    <p><i class="fas fa-map-marker-alt"></i> ${camp.location}</p>
+                                    <p><i class="fas fa-clock"></i> ${camp.time}</p>
+                                    <p><i class="fas fa-user-md"></i> Medical Professionals</p>
+                                    ${camp.contact ? `<p><i class="fas fa-phone"></i> ${camp.contact}</p>` : ''}
+                                </div>
+                                ${camp.services ? `
+                                <div class="camp-services">
+                                    <span>${camp.services}</span>
+                                </div>
+                                ` : ''}
+                                ${camp.description ? `
+                                <p style="margin-top: 15px; color: #666; line-height: 1.6;">${camp.description}</p>
+                                ` : ''}
+                                ${status === 'upcoming' ? `
+                                <div class="camp-cta">
+                                    <a href="https://wa.me/919XXXXXX363?text=I want to register for ${encodeURIComponent(camp.title)}" class="btn btn-primary" target="_blank">
+                                        <i class="fab fa-whatsapp"></i> Register Now
+                                    </a>
+                                </div>
+                                ` : ''}
+                            </div>
+                        `;
+                        grid.appendChild(campCard);
+                    });
+                } else {
+                    throw new Error(response.error || 'Failed to load camps');
+                }
+            } catch (error) {
+                console.error('Error loading health camps:', error);
+                grid.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 60px;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #ff6b35;"></i>
+                        <p style="margin-top: 20px; font-size: 18px; color: #666;">Unable to load health camps</p>
+                        <p style="color: #888; margin-top: 10px;">Please check if the API server is running.</p>
+                        <button onclick="location.reload()" class="btn btn-primary" style="margin-top: 20px;">
+                            <i class="fas fa-redo"></i> Retry
+                        </button>
                     </div>
                 `;
-                grid.appendChild(campCard);
-            });
+            }
         }
     </script>
 </body>

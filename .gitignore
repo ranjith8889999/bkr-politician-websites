@@ -1,3 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Environment variables
+.env
+backend/.env
+
 # Node modules
 node_modules/
 
@@ -16,3 +38,4 @@ desktop.ini
 # Temporary files
 *.tmp
 *.temp
+*.bak

@@ -841,6 +841,69 @@
         </button>
     </div>
 
+    <script src="js/api-service.js"></script>
     <script src="js/main.js"></script>
+    <script>
+        // Load health camps from API on homepage
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadHealthCampsOnHomepage();
+        });
+        
+        async function loadHealthCampsOnHomepage() {
+            const container = document.getElementById('healthCampsContainer');
+            if (!container) return;
+            
+            try {
+                // Fetch all camps from API, then filter upcoming on client side
+                const response = await HealthCampsAPI.getAll();
+                
+                if (response.success && response.data.length > 0) {
+                    // Filter upcoming camps (date >= today)
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    
+                    const upcomingCamps = response.data.filter(camp => {
+                        const campDate = new Date(camp.date);
+                        return campDate >= today || camp.status === 'upcoming';
+                    });
+                    
+                    const camps = upcomingCamps.slice(0, 3); // Show only first 3 camps
+                    
+                    if (camps.length > 0) {
+                        // Clear placeholder content
+                        container.innerHTML = '';
+                        
+                        camps.forEach(camp => {
+                            const date = new Date(camp.date);
+                            const day = date.getDate().toString().padStart(2, '0');
+                            const month = date.toLocaleString('default', { month: 'short' });
+                            
+                            const campCard = document.createElement('div');
+                            campCard.className = 'camp-card animate-on-scroll animated';
+                            campCard.innerHTML = `
+                                <div class="camp-date">
+                                    <span class="day">${day}</span>
+                                    <span class="month">${month}</span>
+                                </div>
+                                <div class="camp-details">
+                                    <h3>${camp.title}</h3>
+                                    <p><i class="fas fa-map-marker-alt"></i> ${camp.location}</p>
+                                    <p><i class="fas fa-clock"></i> ${camp.time}</p>
+                                    <p><i class="fas fa-user-md"></i> ${camp.services || 'Free medical services'}</p>
+                                    <a href="#contact" class="btn btn-sm">Register Now</a>
+                                </div>
+                            `;
+                            container.appendChild(campCard);
+                        });
+                        
+                        console.log(`✅ Loaded ${camps.length} health camps on homepage`);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading health camps:', error);
+                // Keep the existing placeholder HTML if API fails
+            }
+        }
+    </script>
 </body>
 </html>
