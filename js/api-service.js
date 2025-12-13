@@ -4,8 +4,13 @@
    ============================================= */
 
 // API Configuration
+// Automatically detects if running locally or in production
+const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
 const API_CONFIG = {
-    baseURL: 'http://localhost:5000/api',
+    baseURL: isLocalhost 
+        ? 'http://localhost:5000/api' 
+        : 'https://affiliate-bkr.nwp2mw.easypanel.host/api',
     apiKey: 'bkr-secret-key-2025-change-in-production', // Should match backend/.env
     timeout: 10000
 };
