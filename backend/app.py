@@ -1,9 +1,10 @@
 """
 Flask API Server for BKR Politician Website
 Provides REST API endpoints for dynamic content management
+Also serves static frontend files
 """
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from functools import wraps
 import os
@@ -13,8 +14,11 @@ from database import Database
 # Load environment variables
 load_dotenv()
 
-# Initialize Flask app
-app = Flask(__name__)
+# Initialize Flask app with static file serving
+# Set static folder to parent directory to serve all frontend files
+app = Flask(__name__, 
+            static_folder='../',  # Parent directory contains index.html, css, js, etc.
+            static_url_path='')
 
 # Configure CORS - allow requests from frontend
 # Get allowed origins from environment variable or use defaults
@@ -33,6 +37,26 @@ db = Database(os.getenv('DATABASE_PATH', 'bkr_database.db'))
 
 # Get API Key from environment
 API_KEY = os.getenv('API_KEY', 'bkr-secret-key-2025')
+
+# ==================== STATIC FILE ROUTES ====================
+
+@app.route('/')
+def serve_index():
+    """Serve the homepage"""
+    return send_from_directory('..', 'index.html')
+
+@app.route('/<path:path>')
+def serve_static(path):
+    """Serve static files (HTML, CSS, JS, images)"""
+    # Don't serve API routes as static files
+    if path.startswith('api/'):
+        return jsonify({'error': 'Not found'}), 404
+    
+    try:
+        return send_from_directory('..', path)
+    except:
+        # If file not found, return 404 page or redirect to home
+        return send_from_directory('..', 'index.html')
 
 # ==================== MIDDLEWARE ====================
 
@@ -468,6 +492,7 @@ if __name__ == '__main__':
     print(f"🔑 API Key: {API_KEY[:10]}...")
     print(f"🌐 Server: http://localhost:5000")
     print(f"📡 Health Check: http://localhost:5000/api/health")
+    print(f"🌍 Static Files: Serving from parent directory")
     print("=" * 60)
     
     app.run(

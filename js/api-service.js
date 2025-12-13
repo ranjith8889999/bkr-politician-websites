@@ -8,9 +8,10 @@
 const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
 const API_CONFIG = {
+    // Use relative URLs in production since Flask serves both frontend and API
     baseURL: isLocalhost 
         ? 'http://localhost:5000/api' 
-        : 'https://affiliate-bkr.nwp2mw.easypanel.host/api',
+        : '/api',  // Relative URL - same server serves frontend and API
     apiKey: 'bkr-secret-key-2025-change-in-production', // Should match backend/.env
     timeout: 10000
 };
