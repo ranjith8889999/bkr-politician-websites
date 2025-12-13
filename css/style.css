@@ -150,11 +150,6 @@ input, textarea, select {
     filter: drop-shadow(0 10px 30px rgba(255, 107, 53, 0.5));
 }
 
-.loader .congress-hand::before {
-    content: '✋';
-    font-size: 40px;
-}
-
 .loader p {
     font-size: 18px;
     letter-spacing: 2px;

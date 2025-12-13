@@ -32,8 +32,17 @@ CORS(app, resources={
     }
 })
 
-# Initialize Database
-db = Database(os.getenv('DATABASE_PATH', 'bkr_database.db'))
+# Initialize Database with persistence support
+# Use data directory if it exists (persistent volume), otherwise current directory
+DATA_DIR = 'data' if os.path.exists('data') else '.'
+DEFAULT_DB_PATH = os.path.join(DATA_DIR, 'bkr_database.db')
+DATABASE_PATH = os.getenv('DATABASE_PATH', DEFAULT_DB_PATH)
+
+# Create data directory if it doesn't exist
+if not os.path.exists(DATA_DIR):
+    os.makedirs(DATA_DIR, exist_ok=True)
+
+db = Database(DATABASE_PATH)
 
 # Get API Key from environment
 API_KEY = os.getenv('API_KEY', 'bkr-secret-key-2025')
