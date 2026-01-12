@@ -10,8 +10,10 @@ from datetime import datetime
 from models import create_tables
 
 class Database:
-    def __init__(self, host='72.60.101.93', port='5432', database='bkr_db', 
-                 user='ranjith', password='ranjith123'):
+    def __init__(self, host=None, port='5432', database=None, 
+                 user=None, password=None):
+        if not all([host, database, user, password]):
+            raise ValueError('All database parameters are required')
         self.host = host
         self.port = port
         self.database = database

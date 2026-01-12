@@ -138,22 +138,21 @@ input, textarea, select {
 .loader .congress-hand {
     width: 80px;
     height: 80px;
-    background: linear-gradient(45deg, var(--congress-orange), var(--saffron));
-    border-radius: 50%;
     margin: 0 auto 20px;
-    animation: pulse 1.5s infinite;
+    animation: pulse 1.5s infinite, float 3s ease-in-out infinite;
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.loader .congress-hand::before {
-    content: url('../images/congresshand.png');;
-    font-size: 40px;
+    background-image: url('../images/congresshand.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: drop-shadow(0 5px 20px rgba(255, 107, 53, 0.4));
 }
 
 .loader p {
-    font-size: 18px;
+    font-size: 16px;
+    font-weight: 500;
     letter-spacing: 2px;
     animation: fadeInOut 1.5s infinite;
 }
@@ -207,6 +206,90 @@ input, textarea, select {
     display: flex;
     align-items: center;
     gap: 25px;
+}
+
+/* Dropdown Menu Styles */
+.nav-dropdown {
+    position: relative;
+}
+
+.nav-dropdown .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.nav-dropdown .nav-link i {
+    font-size: 10px;
+    transition: transform 0.3s ease;
+}
+
+.nav-dropdown:hover .nav-link i {
+    transform: rotate(180deg);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: rgba(30, 58, 95, 0.98);
+    backdrop-filter: blur(10px);
+    min-width: 200px;
+    border-radius: 8px;
+    padding: 10px 0;
+    margin-top: 10px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 1000;
+}
+
+.nav-dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-menu li {
+    list-style: none;
+}
+
+.dropdown-menu li a {
+    display: block;
+    padding: 12px 20px;
+    color: var(--white);
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: capitalize;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.dropdown-menu li a::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 3px;
+    background: var(--congress-orange);
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
+}
+
+.dropdown-menu li a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    padding-left: 25px;
+    color: var(--congress-orange);
+}
+
+.dropdown-menu li a:hover::before {
+    transform: scaleY(1);
 }
 
 .nav-link {
@@ -2104,14 +2187,72 @@ input, textarea, select {
         height: 100vh;
         background: var(--primary-blue);
         flex-direction: column;
-        justify-content: center;
-        gap: 20px;
+        justify-content: flex-start;
+        gap: 15px;
         transition: var(--transition);
-        padding: 20px;
+        padding: 80px 20px 20px 20px;
+        overflow-y: auto;
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
     }
     
     .nav-menu.active {
         right: 0;
+    }
+    
+    /* Mobile Dropdown Styles */
+    .nav-dropdown .dropdown-menu {
+        position: static;
+        background: rgba(10, 22, 40, 0.95);
+        margin-top: 0;
+        border-radius: 0;
+        padding: 0;
+        max-height: 0;
+        overflow: hidden;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        transition: max-height 0.3s ease;
+    }
+    
+    .nav-dropdown.active .dropdown-menu {
+        max-height: 500px;
+        padding: 5px 0;
+        border-left: 2px solid var(--congress-orange);
+        margin-left: 20px;
+    }
+    
+    .nav-dropdown.active .nav-link i {
+        transform: rotate(180deg);
+    }
+    
+    /* Mobile nav link styles */
+    .nav-menu .nav-link {
+        width: 100%;
+        text-align: left;
+        padding: 12px 15px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    
+    .nav-menu .nav-link:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .nav-menu .nav-link::after {
+        display: none;
+    }
+    
+    .nav-dropdown .nav-link {
+        justify-content: space-between;
+    }
+    
+    .dropdown-menu li a {
+        padding: 10px 15px;
+        font-size: 13px;
+    }
+    
+    .dropdown-menu li a:hover {
+        padding-left: 20px;
     }
     
     .nav-toggle {

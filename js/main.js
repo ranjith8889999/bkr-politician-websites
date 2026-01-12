@@ -52,11 +52,61 @@ function initNavbar() {
         navMenu.classList.toggle('active');
     });
     
-    // Close menu on link click
+    // Dropdown menu handling
+    const dropdowns = document.querySelectorAll('.nav-dropdown');
+    dropdowns.forEach(dropdown => {
+        const dropdownLink = dropdown.querySelector('.nav-link');
+        
+        dropdownLink.addEventListener('click', function(e) {
+            // On mobile, toggle dropdown
+            if (window.innerWidth <= 992) {
+                e.preventDefault();
+                
+                // Close other dropdowns
+                dropdowns.forEach(otherDropdown => {
+                    if (otherDropdown !== dropdown) {
+                        otherDropdown.classList.remove('active');
+                    }
+                });
+                
+                // Toggle current dropdown
+                dropdown.classList.toggle('active');
+            }
+        });
+    });
+    
+    // Close all dropdowns when clicking outside on mobile
+    document.addEventListener('click', function(e) {
+        if (window.innerWidth <= 992) {
+            if (!e.target.closest('.nav-dropdown')) {
+                dropdowns.forEach(dropdown => {
+                    dropdown.classList.remove('active');
+                });
+            }
+        }
+    });
+    
+    // Close menu on link click (but not for dropdown parent links)
     navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            // Don't close menu if it's a dropdown parent link on mobile
+            if (window.innerWidth <= 992 && link.closest('.nav-dropdown')) {
+                return; // Let the dropdown handler handle it
+            }
+            navToggle.classList.remove('active');
+            navMenu.classList.remove('active');
+        });
+    });
+    
+    // Close menu when dropdown items are clicked
+    const dropdownLinks = document.querySelectorAll('.dropdown-menu a');
+    dropdownLinks.forEach(link => {
         link.addEventListener('click', function() {
             navToggle.classList.remove('active');
             navMenu.classList.remove('active');
+            dropdowns.forEach(dropdown => {
+                dropdown.classList.remove('active');
+            });
         });
     });
     

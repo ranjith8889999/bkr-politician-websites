@@ -33,12 +33,15 @@ CORS(app, resources={
 })
 
 # Initialize Database with PostgreSQL connection
-# Connection parameters from environment variables or defaults
-DB_HOST = os.getenv('DB_HOST', '72.60.101.93')
+# Connection parameters from environment variables (REQUIRED)
+DB_HOST = os.getenv('DB_HOST')
 DB_PORT = os.getenv('DB_PORT', '5432')
-DB_NAME = os.getenv('DB_NAME', 'bkr_db')
-DB_USER = os.getenv('DB_USER', 'ranjith')
-DB_PASSWORD = os.getenv('DB_PASSWORD', 'ranjith123')
+DB_NAME = os.getenv('DB_NAME')
+DB_USER = os.getenv('DB_USER')
+DB_PASSWORD = os.getenv('DB_PASSWORD')
+
+if not all([DB_HOST, DB_NAME, DB_USER, DB_PASSWORD]):
+    raise ValueError('Database credentials must be set in environment variables')
 
 db = Database(
     host=DB_HOST,
@@ -48,8 +51,10 @@ db = Database(
     password=DB_PASSWORD
 )
 
-# Get API Key from environment
-API_KEY = os.getenv('API_KEY', 'bkr-secret-key-2025-change-in-production')
+# Get API Key from environment (REQUIRED)
+API_KEY = os.getenv('API_KEY')
+if not API_KEY:
+    raise ValueError('API_KEY must be set in environment variables')
 
 # ==================== STATIC FILE ROUTES ====================
 
