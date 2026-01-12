@@ -3,20 +3,31 @@ Database Connection and Query Functions
 Handles all database operations for the BKR website
 """
 
-import sqlite3
+import psycopg2
+import psycopg2.extras
 import os
 from datetime import datetime
 from models import create_tables
 
 class Database:
-    def __init__(self, db_path='bkr_database.db'):
-        self.db_path = db_path
+    def __init__(self, host='72.60.101.93', port='5432', database='bkr_db', 
+                 user='ranjith', password='ranjith123'):
+        self.host = host
+        self.port = port
+        self.database = database
+        self.user = user
+        self.password = password
         self.init_database()
     
     def get_connection(self):
         """Get a database connection"""
-        conn = sqlite3.connect(self.db_path)
-        conn.row_factory = sqlite3.Row  # Enable column access by name
+        conn = psycopg2.connect(
+            host=self.host,
+            port=self.port,
+            database=self.database,
+            user=self.user,
+            password=self.password
+        )
         return conn
     
     def init_database(self):
@@ -30,7 +41,7 @@ class Database:
     def get_health_camps(self, status=None, limit=None, upcoming=None):
         """Get all health camps or filter by status/upcoming"""
         conn = self.get_connection()
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         
         # Get today's date in YYYY-MM-DD format for comparison
         from datetime import date
@@ -38,10 +49,10 @@ class Database:
         
         if upcoming:
             # Filter for upcoming camps (date >= today)
-            query = "SELECT * FROM health_camps WHERE date >= ? ORDER BY date ASC"
+            query = "SELECT * FROM health_camps WHERE date >= %s ORDER BY date ASC"
             cursor.execute(query, (today,))
         elif status:
-            query = "SELECT * FROM health_camps WHERE status = ? ORDER BY date DESC"
+            query = "SELECT * FROM health_camps WHERE status = %s ORDER BY date DESC"
             cursor.execute(query, (status,))
         else:
             # All camps sorted by date descending (newest/upcoming first)
@@ -57,8 +68,8 @@ class Database:
     def get_health_camp_by_id(self, camp_id):
         """Get a single health camp by ID"""
         conn = self.get_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM health_camps WHERE id = ?", (camp_id,))
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cursor.execute("SELECT * FROM health_camps WHERE id = %s", (camp_id,))
         camp = cursor.fetchone()
         conn.close()
         return dict(camp) if camp else None
@@ -71,7 +82,8 @@ class Database:
         query = """
             INSERT INTO health_camps 
             (title, date, time, location, services, description, contact, status)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            RETURNING id
         """
         
         cursor.execute(query, (
@@ -85,7 +97,7 @@ class Database:
             data.get('status', 'upcoming')
         ))
         
-        camp_id = cursor.lastrowid
+        camp_id = cursor.fetchone()[0]
         conn.commit()
         conn.close()
         return camp_id
@@ -97,10 +109,10 @@ class Database:
         
         query = """
             UPDATE health_camps 
-            SET title = ?, date = ?, time = ?, location = ?, 
-                services = ?, description = ?, contact = ?, status = ?,
+            SET title = %s, date = %s, time = %s, location = %s, 
+                services = %s, description = %s, contact = %s, status = %s,
                 updated_at = CURRENT_TIMESTAMP
-            WHERE id = ?
+            WHERE id = %s
         """
         
         cursor.execute(query, (
@@ -124,7 +136,7 @@ class Database:
         """Delete a health camp"""
         conn = self.get_connection()
         cursor = conn.cursor()
-        cursor.execute("DELETE FROM health_camps WHERE id = ?", (camp_id,))
+        cursor.execute("DELETE FROM health_camps WHERE id = %s", (camp_id,))
         conn.commit()
         rows_affected = cursor.rowcount
         conn.close()
@@ -135,10 +147,10 @@ class Database:
     def get_complaints(self, status=None, limit=None):
         """Get all complaints or filter by status"""
         conn = self.get_connection()
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         
         if status:
-            query = "SELECT * FROM complaints WHERE status = ? ORDER BY created_at DESC"
+            query = "SELECT * FROM complaints WHERE status = %s ORDER BY created_at DESC"
             cursor.execute(query, (status,))
         else:
             query = "SELECT * FROM complaints ORDER BY created_at DESC"
@@ -158,7 +170,8 @@ class Database:
         query = """
             INSERT INTO complaints 
             (name, phone, email, area, category, subject, message, address, status, date)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            RETURNING id
         """
         
         cursor.execute(query, (
@@ -174,7 +187,7 @@ class Database:
             data.get('date', datetime.now().strftime('%Y-%m-%d'))
         ))
         
-        complaint_id = cursor.lastrowid
+        complaint_id = cursor.fetchone()[0]
         conn.commit()
         conn.close()
         return complaint_id
@@ -184,7 +197,7 @@ class Database:
         conn = self.get_connection()
         cursor = conn.cursor()
         
-        query = "UPDATE complaints SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?"
+        query = "UPDATE complaints SET status = %s, updated_at = CURRENT_TIMESTAMP WHERE id = %s"
         cursor.execute(query, (status, complaint_id))
         
         conn.commit()
@@ -197,7 +210,7 @@ class Database:
     def get_feedback(self, limit=None):
         """Get all feedback"""
         conn = self.get_connection()
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         
         query = "SELECT * FROM feedback ORDER BY created_at DESC"
         if limit:
@@ -216,7 +229,8 @@ class Database:
         query = """
             INSERT INTO feedback 
             (name, phone, email, area, rating, category, message, suggestions, date)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            RETURNING id
         """
         
         cursor.execute(query, (
@@ -231,7 +245,7 @@ class Database:
             data.get('date', datetime.now().strftime('%Y-%m-%d'))
         ))
         
-        feedback_id = cursor.lastrowid
+        feedback_id = cursor.fetchone()[0]
         conn.commit()
         conn.close()
         return feedback_id
@@ -241,10 +255,10 @@ class Database:
     def get_news(self, status=None, limit=None):
         """Get all news or filter by status"""
         conn = self.get_connection()
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         
         if status:
-            query = "SELECT * FROM news WHERE status = ? ORDER BY date DESC"
+            query = "SELECT * FROM news WHERE status = %s ORDER BY date DESC"
             cursor.execute(query, (status,))
         else:
             query = "SELECT * FROM news ORDER BY date DESC"
@@ -264,7 +278,8 @@ class Database:
         query = """
             INSERT INTO news 
             (title, category, summary, content, status, date)
-            VALUES (?, ?, ?, ?, ?, ?)
+            VALUES (%s, %s, %s, %s, %s, %s)
+            RETURNING id
         """
         
         cursor.execute(query, (
@@ -276,7 +291,7 @@ class Database:
             data.get('date', datetime.now().strftime('%Y-%m-%d'))
         ))
         
-        news_id = cursor.lastrowid
+        news_id = cursor.fetchone()[0]
         conn.commit()
         conn.close()
         return news_id
@@ -288,9 +303,9 @@ class Database:
         
         query = """
             UPDATE news 
-            SET title = ?, category = ?, summary = ?, content = ?, status = ?,
+            SET title = %s, category = %s, summary = %s, content = %s, status = %s,
                 updated_at = CURRENT_TIMESTAMP
-            WHERE id = ?
+            WHERE id = %s
         """
         
         cursor.execute(query, (
@@ -311,7 +326,7 @@ class Database:
         """Delete a news article"""
         conn = self.get_connection()
         cursor = conn.cursor()
-        cursor.execute("DELETE FROM news WHERE id = ?", (news_id,))
+        cursor.execute("DELETE FROM news WHERE id = %s", (news_id,))
         conn.commit()
         rows_affected = cursor.rowcount
         conn.close()
@@ -322,7 +337,7 @@ class Database:
     def get_dashboard_stats(self):
         """Get statistics for dashboard"""
         conn = self.get_connection()
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         
         stats = {}
         
@@ -349,7 +364,7 @@ class Database:
         # Average rating
         cursor.execute("SELECT AVG(rating) as avg_rating FROM feedback")
         avg = cursor.fetchone()['avg_rating']
-        stats['average_rating'] = round(avg, 1) if avg else 0
+        stats['average_rating'] = round(float(avg), 1) if avg else 0
         
         # Total news
         cursor.execute("SELECT COUNT(*) as count FROM news WHERE status = 'published'")

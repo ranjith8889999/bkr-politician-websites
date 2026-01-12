@@ -136,18 +136,20 @@ input, textarea, select {
 }
 
 .loader .congress-hand {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(45deg, var(--congress-orange), var(--saffron));
+    border-radius: 50%;
     margin: 0 auto 20px;
-    animation: pulse 1.5s infinite, float 3s ease-in-out infinite;
+    animation: pulse 1.5s infinite;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-image: url('../images/congresshand.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    filter: drop-shadow(0 10px 30px rgba(255, 107, 53, 0.5));
+}
+
+.loader .congress-hand::before {
+    content: url('../images/congresshand.png');;
+    font-size: 40px;
 }
 
 .loader p {

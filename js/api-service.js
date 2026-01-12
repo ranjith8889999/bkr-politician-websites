@@ -12,7 +12,7 @@ const API_CONFIG = {
     baseURL: isLocalhost 
         ? 'http://localhost:5000/api' 
         : '/api',  // Relative URL - same server serves frontend and API
-    apiKey: 'bkr-secret-key-2025', // Should match backend/.env or API_KEY environment variable
+    apiKey: 'bkr-secret-key-2025-change-in-production', // Should match backend/.env or API_KEY environment variable
     timeout: 10000
 };
 

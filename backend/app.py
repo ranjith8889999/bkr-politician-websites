@@ -32,20 +32,24 @@ CORS(app, resources={
     }
 })
 
-# Initialize Database with persistence support
-# Use data directory if it exists (persistent volume), otherwise current directory
-DATA_DIR = 'data' if os.path.exists('data') else '.'
-DEFAULT_DB_PATH = os.path.join(DATA_DIR, 'bkr_database.db')
-DATABASE_PATH = os.getenv('DATABASE_PATH', DEFAULT_DB_PATH)
+# Initialize Database with PostgreSQL connection
+# Connection parameters from environment variables or defaults
+DB_HOST = os.getenv('DB_HOST', '72.60.101.93')
+DB_PORT = os.getenv('DB_PORT', '5432')
+DB_NAME = os.getenv('DB_NAME', 'bkr_db')
+DB_USER = os.getenv('DB_USER', 'ranjith')
+DB_PASSWORD = os.getenv('DB_PASSWORD', 'ranjith123')
 
-# Create data directory if it doesn't exist
-if not os.path.exists(DATA_DIR):
-    os.makedirs(DATA_DIR, exist_ok=True)
-
-db = Database(DATABASE_PATH)
+db = Database(
+    host=DB_HOST,
+    port=DB_PORT,
+    database=DB_NAME,
+    user=DB_USER,
+    password=DB_PASSWORD
+)
 
 # Get API Key from environment
-API_KEY = os.getenv('API_KEY', 'bkr-secret-key-2025')
+API_KEY = os.getenv('API_KEY', 'bkr-secret-key-2025-change-in-production')
 
 # ==================== STATIC FILE ROUTES ====================
 
@@ -501,7 +505,8 @@ if __name__ == '__main__':
     print("=" * 60)
     print("🚀 BKR API Server Starting...")
     print("=" * 60)
-    print(f"📁 Database: {os.getenv('DATABASE_PATH', 'bkr_database.db')}")
+    print(f"�️  PostgreSQL Database: {DB_HOST}:{DB_PORT}/{DB_NAME}")
+    print(f"👤 Database User: {DB_USER}")
     print(f"🔑 API Key: {API_KEY[:10]}...")
     print(f"🌐 Server: http://localhost:5000")
     print(f"📡 Health Check: http://localhost:5000/api/health")

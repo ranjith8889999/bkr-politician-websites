@@ -3,7 +3,7 @@ Database Models for BKR Politician Website
 Defines the schema for all database tables
 """
 
-import sqlite3
+import psycopg2
 from datetime import datetime
 
 def create_tables(conn):
@@ -13,15 +13,15 @@ def create_tables(conn):
     # Health Camps Table
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS health_camps (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT NOT NULL,
-            date TEXT NOT NULL,
-            time TEXT NOT NULL,
-            location TEXT NOT NULL,
+            id SERIAL PRIMARY KEY,
+            title VARCHAR(500) NOT NULL,
+            date DATE NOT NULL,
+            time VARCHAR(50) NOT NULL,
+            location VARCHAR(500) NOT NULL,
             services TEXT,
             description TEXT,
-            contact TEXT,
-            status TEXT DEFAULT 'upcoming',
+            contact VARCHAR(200),
+            status VARCHAR(50) DEFAULT 'upcoming',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
@@ -30,17 +30,17 @@ def create_tables(conn):
     # Complaints Table
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS complaints (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            phone TEXT NOT NULL,
-            email TEXT,
-            area TEXT,
-            category TEXT NOT NULL,
-            subject TEXT NOT NULL,
+            id SERIAL PRIMARY KEY,
+            name VARCHAR(200) NOT NULL,
+            phone VARCHAR(20) NOT NULL,
+            email VARCHAR(200),
+            area VARCHAR(200),
+            category VARCHAR(100) NOT NULL,
+            subject VARCHAR(500) NOT NULL,
             message TEXT NOT NULL,
             address TEXT,
-            status TEXT DEFAULT 'pending',
-            date TEXT NOT NULL,
+            status VARCHAR(50) DEFAULT 'pending',
+            date DATE NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
@@ -49,16 +49,16 @@ def create_tables(conn):
     # Feedback Table
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS feedback (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            phone TEXT NOT NULL,
-            email TEXT,
-            area TEXT,
+            id SERIAL PRIMARY KEY,
+            name VARCHAR(200) NOT NULL,
+            phone VARCHAR(20) NOT NULL,
+            email VARCHAR(200),
+            area VARCHAR(200),
             rating INTEGER NOT NULL CHECK(rating >= 1 AND rating <= 5),
-            category TEXT,
+            category VARCHAR(100),
             message TEXT NOT NULL,
             suggestions TEXT,
-            date TEXT NOT NULL,
+            date DATE NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     ''')
@@ -66,13 +66,13 @@ def create_tables(conn):
     # News Table
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS news (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT NOT NULL,
-            category TEXT NOT NULL,
+            id SERIAL PRIMARY KEY,
+            title VARCHAR(500) NOT NULL,
+            category VARCHAR(100) NOT NULL,
             summary TEXT,
             content TEXT NOT NULL,
-            status TEXT DEFAULT 'published',
-            date TEXT NOT NULL,
+            status VARCHAR(50) DEFAULT 'published',
+            date DATE NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
@@ -81,10 +81,10 @@ def create_tables(conn):
     # Gallery Table (for future use)
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS gallery (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            image_url TEXT NOT NULL,
+            id SERIAL PRIMARY KEY,
+            image_url VARCHAR(500) NOT NULL,
             caption TEXT,
-            category TEXT,
+            category VARCHAR(100),
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     ''')
@@ -92,9 +92,9 @@ def create_tables(conn):
     # Admin Users Table
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS admin_users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT UNIQUE NOT NULL,
-            password TEXT NOT NULL,
+            id SERIAL PRIMARY KEY,
+            username VARCHAR(100) UNIQUE NOT NULL,
+            password VARCHAR(255) NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     ''')
