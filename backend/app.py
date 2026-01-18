@@ -10,6 +10,7 @@ from functools import wraps
 import os
 from dotenv import load_dotenv
 from database import Database
+from email_service import EmailService
 
 # Load environment variables
 load_dotenv()
@@ -50,6 +51,9 @@ db = Database(
     user=DB_USER,
     password=DB_PASSWORD
 )
+
+# Initialize Email Service
+email_service = EmailService()
 
 # Get API Key from environment (REQUIRED)
 API_KEY = os.getenv('API_KEY')
@@ -482,6 +486,148 @@ def get_dashboard_stats():
             'success': True,
             'data': stats
         })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+# ==================== EMAIL ENDPOINTS ====================
+
+@app.route('/api/email/complaint', methods=['POST'])
+def send_complaint():
+    """Send complaint email to helpdesk"""
+    try:
+        data = request.get_json()
+        
+        # Validate required fields
+        required_fields = ['name', 'phone', 'subject', 'message', 'category', 'area']
+        for field in required_fields:
+            if not data.get(field):
+                return jsonify({
+                    'success': False,
+                    'error': f'Missing required field: {field}'
+                }), 400
+        
+        # Send email
+        success, message = email_service.send_complaint_email(data)
+        
+        if success:
+            return jsonify({
+                'success': True,
+                'message': 'Complaint submitted successfully. We will respond within 48 hours.'
+            }), 200
+        else:
+            return jsonify({
+                'success': False,
+                'error': message
+            }), 500
+            
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/email/volunteer', methods=['POST'])
+def send_volunteer():
+    """Send volunteer registration email"""
+    try:
+        data = request.get_json()
+        
+        # Validate required fields
+        required_fields = ['name', 'phone', 'email', 'area']
+        for field in required_fields:
+            if not data.get(field):
+                return jsonify({
+                    'success': False,
+                    'error': f'Missing required field: {field}'
+                }), 400
+        
+        # Send email
+        success, message = email_service.send_volunteer_email(data)
+        
+        if success:
+            return jsonify({
+                'success': True,
+                'message': 'Thank you for registering! We will contact you soon.'
+            }), 200
+        else:
+            return jsonify({
+                'success': False,
+                'error': message
+            }), 500
+            
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/email/contact', methods=['POST'])
+def send_contact():
+    """Send contact/get-in-touch email"""
+    try:
+        data = request.get_json()
+        
+        # Validate required fields
+        required_fields = ['name', 'email', 'subject', 'message']
+        for field in required_fields:
+            if not data.get(field):
+                return jsonify({
+                    'success': False,
+                    'error': f'Missing required field: {field}'
+                }), 400
+        
+        # Send email
+        success, message = email_service.send_contact_email(data)
+        
+        if success:
+            return jsonify({
+                'success': True,
+                'message': 'Message sent successfully. We will get back to you soon.'
+            }), 200
+        else:
+            return jsonify({
+                'success': False,
+                'error': message
+            }), 500
+            
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/email/feedback', methods=['POST'])
+def send_feedback():
+    """Send feedback email"""
+    try:
+        data = request.get_json()
+        
+        # Validate required fields - rating and category are required
+        required_fields = ['rating', 'category']
+        for field in required_fields:
+            if not data.get(field):
+                return jsonify({
+                    'success': False,
+                    'error': f'Missing required field: {field}'
+                }), 400
+        
+        # Send email
+        success, message = email_service.send_feedback_email(data)
+        
+        if success:
+            return jsonify({
+                'success': True,
+                'message': 'Thank you for your feedback! We appreciate your input.'
+            }), 200
+        else:
+            return jsonify({
+                'success': False,
+                'error': message
+            }), 500
+            
     except Exception as e:
         return jsonify({
             'success': False,

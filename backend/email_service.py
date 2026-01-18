@@ -1,0 +1,368 @@
+"""
+Email Service for sending emails via SMTP
+Handles all email functionality for the BKR website
+"""
+
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.utils import formataddr
+import os
+from datetime import datetime
+
+
+class EmailService:
+    """Service class to handle email sending via SMTP"""
+    
+    def __init__(self):
+        """Initialize email service with SMTP configuration from environment variables"""
+        self.smtp_server = os.getenv('SMTP_SERVER', 'smtp.gmail.com')
+        self.smtp_port = int(os.getenv('SMTP_PORT', '587'))
+        self.smtp_username = os.getenv('SMTP_USERNAME')
+        self.smtp_password = os.getenv('SMTP_PASSWORD')
+        self.email_from = os.getenv('EMAIL_FROM')
+        self.email_to_helpdesk = os.getenv('EMAIL_TO_HELPDESK')
+        
+        if not all([self.smtp_username, self.smtp_password, self.email_from]):
+            raise ValueError('Email configuration incomplete. Check environment variables.')
+    
+    def _create_html_email(self, subject, body_html):
+        """Create a MIME email message with HTML content"""
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = subject
+        msg['From'] = formataddr(('BKR Foundation', self.email_from))
+        
+        html_part = MIMEText(body_html, 'html')
+        msg.attach(html_part)
+        
+        return msg
+    
+    def _send_email(self, to_email, msg):
+        """Send email via SMTP"""
+        try:
+            msg['To'] = to_email
+            
+            # Connect to SMTP server
+            server = smtplib.SMTP(self.smtp_server, self.smtp_port)
+            server.starttls()  # Enable TLS encryption
+            server.login(self.smtp_username, self.smtp_password)
+            
+            # Send email
+            server.send_message(msg)
+            server.quit()
+            
+            return True, "Email sent successfully"
+        except smtplib.SMTPAuthenticationError:
+            return False, "Authentication failed. Check email credentials."
+        except smtplib.SMTPException as e:
+            return False, f"SMTP error: {str(e)}"
+        except Exception as e:
+            return False, f"Failed to send email: {str(e)}"
+    
+    def send_complaint_email(self, data):
+        """
+        Send complaint email to helpdesk
+        
+        Args:
+            data (dict): Complaint form data containing name, phone, email, area, category, subject, message, address
+        
+        Returns:
+            tuple: (success: bool, message: str)
+        """
+        subject = f"File Complaint - {data.get('subject', 'No Subject')}"
+        
+        body_html = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                .header {{ background: linear-gradient(135deg, #1e3a5f 0%, #0a1628 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }}
+                .content {{ background: #f8f9fa; padding: 30px; border-radius: 0 0 8px 8px; }}
+                .field {{ margin-bottom: 20px; background: white; padding: 15px; border-radius: 6px; border-left: 4px solid #ff6b35; }}
+                .label {{ font-weight: bold; color: #1e3a5f; margin-bottom: 5px; }}
+                .value {{ color: #495057; }}
+                .footer {{ text-align: center; margin-top: 20px; padding: 20px; color: #6c757d; font-size: 12px; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>🚨 New Complaint Filed</h1>
+                    <p>From BKR Foundation Website</p>
+                </div>
+                <div class="content">
+                    <div class="field">
+                        <div class="label">📋 Subject:</div>
+                        <div class="value">{data.get('subject', 'N/A')}</div>
+                    </div>
+                    <div class="field">
+                        <div class="label">👤 Name:</div>
+                        <div class="value">{data.get('name', 'N/A')}</div>
+                    </div>
+                    <div class="field">
+                        <div class="label">📞 Phone:</div>
+                        <div class="value">{data.get('phone', 'N/A')}</div>
+                    </div>
+                    <div class="field">
+                        <div class="label">📧 Email:</div>
+                        <div class="value">{data.get('email', 'N/A')}</div>
+                    </div>
+                    <div class="field">
+                        <div class="label">📍 Area:</div>
+                        <div class="value">{data.get('area', 'N/A')}</div>
+                    </div>
+                    <div class="field">
+                        <div class="label">🏷️ Category:</div>
+                        <div class="value">{data.get('category', 'N/A')}</div>
+                    </div>
+                    <div class="field">
+                        <div class="label">💬 Complaint Details:</div>
+                        <div class="value">{data.get('message', 'N/A')}</div>
+                    </div>
+                    {f'''<div class="field">
+                        <div class="label">🏠 Address:</div>
+                        <div class="value">{data.get('address', 'N/A')}</div>
+                    </div>''' if data.get('address') else ''}
+                    <div class="field">
+                        <div class="label">🕒 Submitted:</div>
+                        <div class="value">{datetime.now().strftime('%B %d, %Y at %I:%M %p')}</div>
+                    </div>
+                </div>
+                <div class="footer">
+                    <p>This is an automated message from BKR Foundation Website</p>
+                    <p>Please respond within 48 hours</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        msg = self._create_html_email(subject, body_html)
+        return self._send_email(self.email_to_helpdesk, msg)
+    
+    def send_volunteer_email(self, data):
+        """
+        Send volunteer registration email
+        
+        Args:
+            data (dict): Volunteer form data containing name, phone, email, area, message
+        
+        Returns:
+            tuple: (success: bool, message: str)
+        """
+        subject = f"Volunteer Registration - {data.get('name', 'New Volunteer')}"
+        
+        body_html = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                .header {{ background: linear-gradient(135deg, #ff6b35 0%, #ff9933 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }}
+                .content {{ background: #f8f9fa; padding: 30px; border-radius: 0 0 8px 8px; }}
+                .field {{ margin-bottom: 20px; background: white; padding: 15px; border-radius: 6px; border-left: 4px solid #1e3a5f; }}
+                .label {{ font-weight: bold; color: #ff6b35; margin-bottom: 5px; }}
+                .value {{ color: #495057; }}
+                .footer {{ text-align: center; margin-top: 20px; padding: 20px; color: #6c757d; font-size: 12px; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>🤝 New Volunteer Registration</h1>
+                    <p>Someone wants to join the movement!</p>
+                </div>
+                <div class="content">
+                    <div class="field">
+                        <div class="label">👤 Name:</div>
+                        <div class="value">{data.get('name', 'N/A')}</div>
+                    </div>
+                    <div class="field">
+                        <div class="label">📞 Phone:</div>
+                        <div class="value">{data.get('phone', 'N/A')}</div>
+                    </div>
+                    <div class="field">
+                        <div class="label">📧 Email:</div>
+                        <div class="value">{data.get('email', 'N/A')}</div>
+                    </div>
+                    <div class="field">
+                        <div class="label">📍 Area:</div>
+                        <div class="value">{data.get('area', 'N/A')}</div>
+                    </div>
+                    <div class="field">
+                        <div class="label">💬 Why they want to volunteer:</div>
+                        <div class="value">{data.get('message', 'N/A')}</div>
+                    </div>
+                    <div class="field">
+                        <div class="label">🕒 Registered:</div>
+                        <div class="value">{datetime.now().strftime('%B %d, %Y at %I:%M %p')}</div>
+                    </div>
+                </div>
+                <div class="footer">
+                    <p>This is an automated message from BKR Foundation Website</p>
+                    <p>Welcome them to the movement!</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        msg = self._create_html_email(subject, body_html)
+        return self._send_email(self.email_from, msg)
+    
+    def send_contact_email(self, data):
+        """
+        Send contact/get-in-touch email (casual message)
+        
+        Args:
+            data (dict): Contact form data containing name, email, subject, message
+        
+        Returns:
+            tuple: (success: bool, message: str)
+        """
+        subject = f"Casual Message - {data.get('subject', 'Get in Touch')}"
+        
+        body_html = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                .header {{ background: linear-gradient(135deg, #1e3a5f 0%, #0a1628 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }}
+                .content {{ background: #f8f9fa; padding: 30px; border-radius: 0 0 8px 8px; }}
+                .field {{ margin-bottom: 20px; background: white; padding: 15px; border-radius: 6px; border-left: 4px solid #ff6b35; }}
+                .label {{ font-weight: bold; color: #1e3a5f; margin-bottom: 5px; }}
+                .value {{ color: #495057; }}
+                .footer {{ text-align: center; margin-top: 20px; padding: 20px; color: #6c757d; font-size: 12px; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>💌 New Message</h1>
+                    <p>Someone wants to get in touch</p>
+                </div>
+                <div class="content">
+                    <div class="field">
+                        <div class="label">📋 Subject:</div>
+                        <div class="value">{data.get('subject', 'N/A')}</div>
+                    </div>
+                    <div class="field">
+                        <div class="label">👤 Name:</div>
+                        <div class="value">{data.get('name', 'N/A')}</div>
+                    </div>
+                    <div class="field">
+                        <div class="label">📧 Email:</div>
+                        <div class="value">{data.get('email', 'N/A')}</div>
+                    </div>
+                    <div class="field">
+                        <div class="label">💬 Message:</div>
+                        <div class="value">{data.get('message', 'N/A')}</div>
+                    </div>
+                    <div class="field">
+                        <div class="label">🕒 Sent:</div>
+                        <div class="value">{datetime.now().strftime('%B %d, %Y at %I:%M %p')}</div>
+                    </div>
+                </div>
+                <div class="footer">
+                    <p>This is an automated message from BKR Foundation Website</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        msg = self._create_html_email(subject, body_html)
+        return self._send_email(self.email_from, msg)
+    
+    def send_feedback_email(self, data):
+        """
+        Send feedback email
+        
+        Args:
+            data (dict): Feedback form data containing rating, category, name, phone, email, area, feedback
+        
+        Returns:
+            tuple: (success: bool, message: str)
+        """
+        subject = f"Share Your Feedback - {data.get('category', 'General Feedback')}"
+        
+        # Create star rating display
+        rating = int(data.get('rating', 0))
+        stars = '⭐' * rating + '☆' * (5 - rating)
+        
+        body_html = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                .header {{ background: linear-gradient(135deg, #ff6b35 0%, #ff9933 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }}
+                .content {{ background: #f8f9fa; padding: 30px; border-radius: 0 0 8px 8px; }}
+                .field {{ margin-bottom: 20px; background: white; padding: 15px; border-radius: 6px; border-left: 4px solid #1e3a5f; }}
+                .label {{ font-weight: bold; color: #ff6b35; margin-bottom: 5px; }}
+                .value {{ color: #495057; }}
+                .rating {{ font-size: 24px; text-align: center; padding: 10px; }}
+                .footer {{ text-align: center; margin-top: 20px; padding: 20px; color: #6c757d; font-size: 12px; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>⭐ New Feedback Received</h1>
+                    <p>Someone shared their experience</p>
+                </div>
+                <div class="content">
+                    <div class="field">
+                        <div class="label">⭐ Rating:</div>
+                        <div class="rating">{stars} ({rating}/5)</div>
+                    </div>
+                    <div class="field">
+                        <div class="label">🏷️ Category:</div>
+                        <div class="value">{data.get('category', 'N/A')}</div>
+                    </div>
+                    <div class="field">
+                        <div class="label">👤 Name:</div>
+                        <div class="value">{data.get('name', 'Anonymous')}</div>
+                    </div>
+                    <div class="field">
+                        <div class="label">📞 Phone:</div>
+                        <div class="value">{data.get('phone', 'N/A')}</div>
+                    </div>
+                    <div class="field">
+                        <div class="label">📧 Email:</div>
+                        <div class="value">{data.get('email', 'N/A')}</div>
+                    </div>
+                    <div class="field">
+                        <div class="label">📍 Area:</div>
+                        <div class="value">{data.get('area', 'N/A')}</div>
+                    </div>
+                    <div class="field">
+                        <div class="label">💬 Feedback:</div>
+                        <div class="value">{data.get('feedback', 'N/A')}</div>
+                    </div>
+                    {f'''<div class="field">
+                        <div class="label">💡 Suggestions:</div>
+                        <div class="value">{data.get('suggestions', 'None')}</div>
+                    </div>''' if data.get('suggestions') else ''}
+                    <div class="field">
+                        <div class="label">🕒 Submitted:</div>
+                        <div class="value">{datetime.now().strftime('%B %d, %Y at %I:%M %p')}</div>
+                    </div>
+                </div>
+                <div class="footer">
+                    <p>This is an automated message from BKR Foundation Website</p>
+                    <p>Thank them for their feedback!</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        msg = self._create_html_email(subject, body_html)
+        return self._send_email(self.email_from, msg)

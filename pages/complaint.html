@@ -331,13 +331,7 @@
                 
                 <div class="complaint-form-card animate-on-scroll">
                     <h2><i class="fas fa-edit"></i> Submit Your Complaint</h2>
-                    <form id="complaintForm" action="https://formsubmit.co/ranjith888999@gmail.com" method="POST">
-                        <!-- FormSubmit Configuration -->
-                        <input type="hidden" name="_subject" value="New Complaint from BKR Website">
-                        <input type="hidden" name="_captcha" value="false">
-                        <input type="hidden" name="_template" value="table">
-                        <input type="hidden" name="_next" value="">
-                        
+                    <form id="complaintForm">
                         <div class="form-row">
                             <div class="form-group">
                                 <label>Full Name <span class="required">*</span></label>
@@ -469,21 +463,63 @@
     </div>
 
     <script src="../js/main.js"></script>
+    <script src="../js/api-service.js"></script>
     <script>
-        // Store complaint locally as backup
-        document.getElementById('complaintForm').addEventListener('submit', function(e) {
-            const formData = new FormData(this);
-            const data = Object.fromEntries(formData.entries());
+        // Handle complaint form submission
+        document.getElementById('complaintForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
             
-            // Store in localStorage
-            const complaints = JSON.parse(localStorage.getItem('complaints') || '[]');
-            complaints.push({
-                id: Date.now(),
-                ...data,
-                date: new Date().toLocaleDateString(),
-                status: 'pending'
-            });
-            localStorage.setItem('complaints', JSON.stringify(complaints));
+            const form = e.target;
+            const submitBtn = form.querySelector('.submit-btn');
+            const originalBtnText = submitBtn.innerHTML;
+            
+            // Disable button and show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            
+            try {
+                // Collect form data
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData.entries());
+                
+                // Store locally as backup
+                const complaints = JSON.parse(localStorage.getItem('complaints') || '[]');
+                complaints.push({
+                    id: Date.now(),
+                    ...data,
+                    date: new Date().toLocaleDateString(),
+                    status: 'pending'
+                });
+                localStorage.setItem('complaints', JSON.stringify(complaints));
+                
+                // Send to API
+                const response = await fetch('/api/email/complaint', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Success - show message and reset form
+                    alert('✅ ' + result.message);
+                    form.reset();
+                } else {
+                    // Error from server
+                    alert('❌ ' + (result.error || 'Failed to submit complaint. Please try again.'));
+                }
+            } catch (error) {
+                // Network or other error
+                console.error('Error:', error);
+                alert('❌ Failed to submit complaint. Please check your internet connection and try again.');
+            } finally {
+                // Re-enable button
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            }
         });
     </script>
 </body>

@@ -315,12 +315,7 @@
                     <h2><i class="fas fa-comment-dots"></i> Your Feedback</h2>
                     <p class="subtitle">Help us improve by sharing your thoughts and suggestions</p>
                     
-                    <form id="feedbackForm" action="https://formsubmit.co/ranjith888999@gmail.com" method="POST">
-                        <!-- FormSubmit Configuration -->
-                        <input type="hidden" name="_subject" value="New Feedback from BKR Website">
-                        <input type="hidden" name="_captcha" value="false">
-                        <input type="hidden" name="_template" value="table">
-                        
+                    <form id="feedbackForm">
                         <!-- Rating Section -->
                         <div class="rating-section">
                             <h3>How would you rate your overall experience?</h3>
@@ -419,7 +414,7 @@
                         
                         <div class="form-group">
                             <label>Your Feedback <span class="required">*</span></label>
-                            <textarea name="message" placeholder="Please share your detailed feedback, suggestions, or experience..." required></textarea>
+                            <textarea name="feedback" placeholder="Please share your detailed feedback, suggestions, or experience..." required></textarea>
                         </div>
                         
                         <div class="form-group">
@@ -495,20 +490,69 @@
     </div>
 
     <script src="../js/main.js"></script>
+    <script src="../js/api-service.js"></script>
     <script>
-        // Store feedback locally as backup
-        document.getElementById('feedbackForm').addEventListener('submit', function(e) {
-            const formData = new FormData(this);
-            const data = Object.fromEntries(formData.entries());
+        // Handle feedback form submission
+        document.getElementById('feedbackForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
             
-            // Store in localStorage
-            const feedback = JSON.parse(localStorage.getItem('feedback') || '[]');
-            feedback.push({
-                id: Date.now(),
-                ...data,
-                date: new Date().toLocaleDateString()
-            });
-            localStorage.setItem('feedback', JSON.stringify(feedback));
+            const form = e.target;
+            const submitBtn = form.querySelector('.submit-btn');
+            const originalBtnText = submitBtn.innerHTML;
+            
+            // Check if rating is selected
+            const rating = form.querySelector('input[name="rating"]:checked');
+            if (!rating) {
+                alert('⚠️ Please select a rating before submitting.');
+                return;
+            }
+            
+            // Disable button and show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            
+            try {
+                // Collect form data
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData.entries());
+                
+                // Store locally as backup
+                const feedback = JSON.parse(localStorage.getItem('feedback') || '[]');
+                feedback.push({
+                    id: Date.now(),
+                    ...data,
+                    date: new Date().toLocaleDateString()
+                });
+                localStorage.setItem('feedback', JSON.stringify(feedback));
+                
+                // Send to API
+                const response = await fetch('/api/email/feedback', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Success - show message and reset form
+                    alert('✅ ' + result.message);
+                    form.reset();
+                } else {
+                    // Error from server
+                    alert('❌ ' + (result.error || 'Failed to submit feedback. Please try again.'));
+                }
+            } catch (error) {
+                // Network or other error
+                console.error('Error:', error);
+                alert('❌ Failed to submit feedback. Please check your internet connection and try again.');
+            } finally {
+                // Re-enable button
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            }
         });
     </script>
 </body>
