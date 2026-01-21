@@ -8,6 +8,7 @@
     <title>B Kishore Reddy | Congress Leader | Quthbullapur</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/nav-actions.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
@@ -53,9 +54,19 @@
                 <li class="nav-dropdown">
                     <a href="#" class="nav-link">Connect <i class="fas fa-chevron-down"></i></a>
                     <ul class="dropdown-menu">
+                        <li><a href="https://wa.me/919XXXXXX363" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp Connect</a></li>
+                        <li><a href="pages/complaint.html"><i class="fas fa-file-alt"></i> File Complaint</a></li>
+                        <li><a href="pages/feedback.html"><i class="fas fa-comment"></i> Share Feedback</a></li>
                         <li><a href="#news">News</a></li>
                         <li><a href="#contact">Contact</a></li>
                     </ul>
+                </li>
+                <li class="nav-actions">
+                    <a href="pages/chat.html" class="nav-ai-btn" id="chatNavLink" style="display: flex;">
+                        <span class="ai-pulse"></span>
+                        <i class="fas fa-robot"></i>
+                        <span class="ai-text">AI</span>
+                    </a>
                 </li>
             </ul>
         </div>
@@ -639,38 +650,16 @@
                 <h2 class="section-title">News & Updates</h2>
                 <div class="section-line"></div>
             </div>
-            <div class="news-grid">
-                <div class="news-card animate-on-scroll">
+            <div class="news-grid" id="newsContainer">
+                <!-- News will be loaded dynamically -->
+                <div class="news-card">
                     <div class="news-image">
                         <img src="images/IMG-20240511-WA0053.jpg" alt="News">
-                        <span class="news-date">Dec 01, 2024</span>
+                        <span class="news-date">Loading...</span>
                     </div>
                     <div class="news-content">
-                        <h3>Free Health Camp Reaches 500+ People</h3>
-                        <p>BKR Foundation's recent health camp at Quthbullapur provided free medical check-ups to over 500 residents...</p>
-                        <a href="#" class="news-link">Read More <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
-                <div class="news-card animate-on-scroll">
-                    <div class="news-image">
-                        <img src="images/IMG-20240511-WA0047.jpg" alt="News">
-                        <span class="news-date">Nov 25, 2024</span>
-                    </div>
-                    <div class="news-content">
-                        <h3>Youth Meeting at Community Center</h3>
-                        <p>B Kishore Reddy addressed young voters at a special meeting, discussing employment and education initiatives...</p>
-                        <a href="#" class="news-link">Read More <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
-                <div class="news-card animate-on-scroll">
-                    <div class="news-image">
-                        <img src="images/IMG-20240511-WA0037.jpg" alt="News">
-                        <span class="news-date">Nov 15, 2024</span>
-                    </div>
-                    <div class="news-content">
-                        <h3>Infrastructure Development Initiative</h3>
-                        <p>New road development project announced for Quthbullapur constituency as part of development agenda...</p>
-                        <a href="#" class="news-link">Read More <i class="fas fa-arrow-right"></i></a>
+                        <h3>Loading news...</h3>
+                        <p>Please wait while we fetch the latest updates...</p>
                     </div>
                 </div>
             </div>
@@ -809,20 +798,21 @@
         <a href="https://wa.me/919XXXXXX363" class="fab-btn whatsapp" target="_blank" title="WhatsApp">
             <i class="fab fa-whatsapp"></i>
         </a>
-        <a href="pages/complaint.html" class="fab-btn complaint" title="File Complaint">
-            <i class="fas fa-exclamation-circle"></i>
-        </a>
         <button class="fab-btn scroll-top" id="scrollTop" title="Scroll to Top">
             <i class="fas fa-arrow-up"></i>
         </button>
     </div>
 
+    <script src="js/config.js"></script>
     <script src="js/api-service.js"></script>
     <script src="js/main.js"></script>
     <script>
-        // Load health camps from API on homepage
+        // Load health camps and news from API on homepage
         document.addEventListener('DOMContentLoaded', async function() {
+            await loadConfig();
             await loadHealthCampsOnHomepage();
+            await loadNewsOnHomepage();
+            await checkChatPageVisibility();
         });
         
         async function loadHealthCampsOnHomepage() {
@@ -869,6 +859,114 @@
                 console.error('Error loading health camps:', error);
                 // Keep the existing placeholder HTML if API fails
             }
+        }
+        
+        async function loadNewsOnHomepage() {
+            const container = document.getElementById('newsContainer');
+            if (!container) {
+                console.error('❌ News container not found!');
+                return;
+            }
+            
+            try {
+                console.log('🔄 Fetching news from API...');
+                const response = await fetch('/api/news?status=published&limit=3');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const result = await response.json();
+                console.log('📰 News API Response:', result);
+                
+                if (result.success && result.data && result.data.length > 0) {
+                    const news = result.data;
+                    
+                    const newsHTML = news.map(item => {
+                        const date = new Date(item.date);
+                        const formattedDate = date.toLocaleDateString('en-US', { 
+                            month: 'short', 
+                            day: '2-digit', 
+                            year: 'numeric' 
+                        });
+                        
+                        const imageUrl = item.image_url || 'images/IMG-20240511-WA0053.jpg';
+                        const summary = item.summary || (item.content ? item.content.substring(0, 150) + '...' : 'No description available');
+                        
+                        return `
+                            <div class="news-card">
+                                <div class="news-image">
+                                    <img src="${imageUrl}" alt="${item.title}" onerror="this.src='images/IMG-20240511-WA0053.jpg'">
+                                    <span class="news-date">${formattedDate}</span>
+                                </div>
+                                <div class="news-content">
+                                    <h3>${item.title}</h3>
+                                    <p>${summary}</p>
+                                    <a href="#" class="news-link" onclick="viewNewsDetail(${item.id}); return false;">
+                                        Read More <i class="fas fa-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                    
+                    container.innerHTML = newsHTML;
+                    console.log(`✅ Loaded ${news.length} news articles on homepage`);
+                } else {
+                    console.warn('⚠️ No published news found, showing fallback');
+                    // Show fallback static news if no news in database
+                    container.innerHTML = `
+                        <div class="news-card">
+                            <div class="news-image">
+                                <img src="images/IMG-20240511-WA0053.jpg" alt="News">
+                                <span class="news-date">Dec 01, 2024</span>
+                            </div>
+                            <div class="news-content">
+                                <h3>Free Health Camp Reaches 500+ People</h3>
+                                <p>BKR Foundation's recent health camp at Quthbullapur provided free medical check-ups to over 500 residents...</p>
+                            </div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('❌ Error loading news:', error);
+                // Show error message in UI
+                container.innerHTML = `
+                    <div class="news-card animate-on-scroll" style="text-align: center; padding: 40px;">
+                        <div class="news-content">
+                            <h3 style="color: #e74c3c;">Unable to Load News</h3>
+                            <p>There was an error loading the latest news. Please refresh the page or try again later.</p>
+                            <p style="font-size: 0.9em; color: #888;">Error: ${error.message}</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        async function checkChatPageVisibility() {
+            try {
+                const response = await fetch('/api/settings/chat_page_enabled');
+                const result = await response.json();
+                
+                const chatNavLink = document.getElementById('chatNavLink');
+                if (chatNavLink) {
+                    if (result.success && result.data.chat_page_enabled === 'false') {
+                        chatNavLink.style.display = 'none';
+                        console.log('🚫 Chat page is disabled');
+                    } else {
+                        chatNavLink.style.display = 'flex';
+                        console.log('✅ Chat page is enabled');
+                    }
+                }
+            } catch (error) {
+                console.error('Error checking chat page visibility:', error);
+                // Default to showing chat page if API fails
+            }
+        }
+        
+        function viewNewsDetail(id) {
+            // You can implement a modal or redirect to a detail page
+            alert(`News detail page for ID ${id} - To be implemented`);
         }
     </script>
 </body>

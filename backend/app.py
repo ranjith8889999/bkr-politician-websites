@@ -8,9 +8,12 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from functools import wraps
 import os
+import uuid
 from dotenv import load_dotenv
 from database import Database
 from email_service import EmailService
+from ai_service import AIService
+from upload_handler import save_upload, allowed_file
 
 # Load environment variables
 load_dotenv()
@@ -54,6 +57,9 @@ db = Database(
 
 # Initialize Email Service
 email_service = EmailService()
+
+# Initialize AI Service with database instance
+ai_service = AIService(db)
 
 # Get API Key from environment (REQUIRED)
 API_KEY = os.getenv('API_KEY')
@@ -396,6 +402,28 @@ def get_news():
             'error': str(e)
         }), 500
 
+@app.route('/api/news/<int:news_id>', methods=['GET'])
+def get_news_by_id(news_id):
+    """Get a single news article by ID"""
+    try:
+        news = db.get_news_by_id(news_id)
+        
+        if not news:
+            return jsonify({
+                'success': False,
+                'error': 'News article not found'
+            }), 404
+        
+        return jsonify({
+            'success': True,
+            'data': news
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
 @app.route('/api/news', methods=['POST'])
 @require_api_key
 def create_news():
@@ -466,6 +494,169 @@ def delete_news(news_id):
         return jsonify({
             'success': True,
             'message': 'News article deleted successfully'
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+# ==================== SETTINGS ENDPOINTS ====================
+
+@app.route('/api/upload', methods=['POST'])
+@require_api_key
+def upload_file():
+    """Upload an image file (Protected)"""
+    try:
+        # Check if file is in request
+        if 'file' not in request.files:
+            return jsonify({
+                'success': False,
+                'error': 'No file provided'
+            }), 400
+        
+        file = request.files['file']
+        
+        # Validate file
+        if file.filename == '':
+            return jsonify({
+                'success': False,
+                'error': 'No file selected'
+            }), 400
+        
+        if not allowed_file(file.filename):
+            return jsonify({
+                'success': False,
+                'error': 'Invalid file type. Allowed: png, jpg, jpeg, gif, webp'
+            }), 400
+        
+        # Save file
+        result = save_upload(file)
+        
+        if result['success']:
+            return jsonify({
+                'success': True,
+                'url': result['url'],
+                'filename': result['filename'],
+                'message': 'File uploaded successfully'
+            }), 200
+        else:
+            return jsonify({
+                'success': False,
+                'error': result['error']
+            }), 400
+            
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/config', methods=['GET'])
+def get_client_config():
+    """Get client-side configuration from environment variables"""
+    try:
+        return jsonify({
+            'success': True,
+            'data': {
+                'apiKey': API_KEY,
+                'environment': os.getenv('ENVIRONMENT', 'production'),
+                'apiBaseUrl': '/api'
+            }
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/settings', methods=['GET'])
+def get_settings():
+    """Get all settings"""
+    try:
+        settings = db.get_settings()
+        
+        # Convert to dictionary format
+        settings_dict = {s['setting_key']: s['setting_value'] for s in settings}
+        
+        return jsonify({
+            'success': True,
+            'data': settings_dict
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/settings/<key>', methods=['GET'])
+def get_setting(key):
+    """Get a specific setting"""
+    try:
+        value = db.get_setting(key)
+        
+        if value is None:
+            return jsonify({
+                'success': False,
+                'error': 'Setting not found'
+            }), 404
+        
+        return jsonify({
+            'success': True,
+            'data': {key: value}
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/settings', methods=['PUT'])
+@require_api_key
+def update_settings():
+    """Update multiple settings (Protected)"""
+    try:
+        data = request.get_json()
+        
+        if not data:
+            return jsonify({
+                'success': False,
+                'error': 'No settings provided'
+            }), 400
+        
+        # Update each setting
+        for key, value in data.items():
+            db.update_setting(key, str(value))
+        
+        return jsonify({
+            'success': True,
+            'message': 'Settings updated successfully'
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/settings/<key>', methods=['PUT'])
+@require_api_key
+def update_setting(key):
+    """Update a specific setting (Protected)"""
+    try:
+        data = request.get_json()
+        value = data.get('value')
+        
+        if value is None:
+            return jsonify({
+                'success': False,
+                'error': 'Value is required'
+            }), 400
+        
+        db.update_setting(key, str(value))
+        
+        return jsonify({
+            'success': True,
+            'message': f'Setting {key} updated successfully'
         })
     except Exception as e:
         return jsonify({
@@ -628,6 +819,145 @@ def send_feedback():
                 'error': message
             }), 500
             
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+# ==================== CHAT AI ENDPOINTS ====================
+
+@app.route('/api/chat/session', methods=['POST'])
+def create_chat_session():
+    """Create a new chat session"""
+    try:
+        # Get user info for session tracking
+        user_data = {
+            'ip': request.remote_addr,
+            'user_agent': request.headers.get('User-Agent', '')
+        }
+        
+        # Create session with UUID
+        session_id = str(uuid.uuid4())
+        
+        # Save to database
+        db.create_chat_session({'session_id': session_id, **user_data})
+        
+        return jsonify({
+            'success': True,
+            'session_id': session_id
+        }), 201
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/chat/message', methods=['POST'])
+def send_chat_message():
+    """Send a message and get AI response"""
+    try:
+        data = request.get_json()
+        
+        # Validate required fields
+        if not data.get('message'):
+            return jsonify({
+                'success': False,
+                'error': 'Message is required'
+            }), 400
+        
+        session_id = data.get('session_id')
+        user_message = data.get('message')
+        
+        # Create new session if not provided
+        if not session_id:
+            session_id = str(uuid.uuid4())
+            user_data = {
+                'ip': request.remote_addr,
+                'user_agent': request.headers.get('User-Agent', ''),
+                'session_id': session_id
+            }
+            db.create_chat_session(user_data)
+        
+        # Get chat history for context
+        chat_history = db.get_chat_history(session_id, limit=10)
+        
+        # Format history for AI
+        formatted_history = [
+            {'role': msg['role'], 'content': msg['content']}
+            for msg in chat_history
+        ]
+        
+        # Save user message to database
+        db.save_chat_message(session_id, 'user', user_message)
+        
+        # Get AI response
+        ai_response = ai_service.chat(
+            user_message=user_message,
+            chat_history=formatted_history,
+            session_id=session_id
+        )
+        
+        if ai_response['success']:
+            # Save AI response to database
+            db.save_chat_message(
+                session_id,
+                'assistant',
+                ai_response['message'],
+                tokens_used=ai_response.get('usage', {}).get('total_tokens')
+            )
+            
+            return jsonify({
+                'success': True,
+                'session_id': session_id,
+                'message': ai_response['message'],
+                'model': ai_response.get('model')
+            }), 200
+        else:
+            return jsonify({
+                'success': False,
+                'error': ai_response.get('error'),
+                'message': ai_response.get('message')
+            }), 500
+            
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/chat/history/<session_id>', methods=['GET'])
+def get_chat_history_endpoint(session_id):
+    """Get chat history for a session"""
+    try:
+        limit = request.args.get('limit', 50, type=int)
+        history = db.get_chat_history(session_id, limit=limit)
+        
+        return jsonify({
+            'success': True,
+            'history': history,
+            'count': len(history)
+        }), 200
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/chat/stats', methods=['GET'])
+@require_api_key
+def get_chat_stats():
+    """Get chat statistics (Protected)"""
+    try:
+        stats = db.get_chat_stats()
+        
+        return jsonify({
+            'success': True,
+            'data': stats
+        }), 200
+        
     except Exception as e:
         return jsonify({
             'success': False,

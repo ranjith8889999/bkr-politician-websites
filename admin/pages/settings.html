@@ -223,11 +223,22 @@
                     
                     <div class="setting-item">
                         <div class="setting-info">
+                            <h4>Enable AI Chat Page</h4>
+                            <p>Show or hide the AI chatbot page from the main website navigation</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="chatPageEnabled" data-setting="chat_page_enabled" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
                             <h4>Email Notifications</h4>
                             <p>Receive email notifications for new complaints and feedback</p>
                         </div>
                         <label class="toggle-switch">
-                            <input type="checkbox" id="emailNotifications" checked>
+                            <input type="checkbox" id="emailNotifications" data-setting="email_notifications" checked>
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
@@ -238,7 +249,7 @@
                             <p>Display upcoming health camps section on the main website</p>
                         </div>
                         <label class="toggle-switch">
-                            <input type="checkbox" id="showHealthCamps" checked>
+                            <input type="checkbox" id="showHealthCamps" data-setting="show_health_camps" checked>
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
@@ -249,7 +260,7 @@
                             <p>Display news and updates section on the main website</p>
                         </div>
                         <label class="toggle-switch">
-                            <input type="checkbox" id="showNews" checked>
+                            <input type="checkbox" id="showNews" data-setting="show_news" checked>
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
@@ -260,9 +271,15 @@
                             <p>Allow visitors to submit volunteer registration forms</p>
                         </div>
                         <label class="toggle-switch">
-                            <input type="checkbox" id="enableVolunteer" checked>
+                            <input type="checkbox" id="enableVolunteer" data-setting="enable_volunteer" checked>
                             <span class="toggle-slider"></span>
                         </label>
+                    </div>
+                    
+                    <div style="margin-top: 20px;">
+                        <button class="btn btn-secondary" onclick="saveSettings()">
+                            <i class="fas fa-save"></i> Save Settings
+                        </button>
                     </div>
                 </div>
                 
@@ -341,6 +358,7 @@
         </main>
     </div>
 
+    <script src="../../js/config.js"></script>
     <script src="../../js/api-service.js"></script>
     <script src="../../js/admin.js"></script>
     <script>
@@ -356,28 +374,89 @@
         }
         
         // Load settings
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadConfig();
             loadSettings();
         });
         
-        function loadSettings() {
-            const settings = JSON.parse(localStorage.getItem('adminSettings') || '{}');
-            
-            document.getElementById('emailNotifications').checked = settings.emailNotifications !== false;
-            document.getElementById('showHealthCamps').checked = settings.showHealthCamps !== false;
-            document.getElementById('showNews').checked = settings.showNews !== false;
-            document.getElementById('enableVolunteer').checked = settings.enableVolunteer !== false;
+        async function loadSettings() {
+            try {
+                const response = await fetch('/api/settings');
+                const result = await response.json();
+                
+                if (result.success) {
+                    const settings = result.data;
+                    
+                    // Update toggles based on database values
+                    document.getElementById('chatPageEnabled').checked = settings.chat_page_enabled === 'true';
+                    document.getElementById('emailNotifications').checked = settings.email_notifications !== 'false';
+                    document.getElementById('showHealthCamps').checked = settings.show_health_camps !== 'false';
+                    document.getElementById('showNews').checked = settings.show_news !== 'false';
+                    
+                    const enableVolunteer = document.getElementById('enableVolunteer');
+                    if (enableVolunteer) {
+                        enableVolunteer.checked = settings.enable_volunteer !== 'false';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading settings:', error);
+                // Fall back to localStorage
+                const settings = JSON.parse(localStorage.getItem('adminSettings') || '{}');
+                document.getElementById('chatPageEnabled').checked = settings.chatPageEnabled !== false;
+                document.getElementById('emailNotifications').checked = settings.emailNotifications !== false;
+                document.getElementById('showHealthCamps').checked = settings.showHealthCamps !== false;
+                document.getElementById('showNews').checked = settings.showNews !== false;
+                const enableVolunteer = document.getElementById('enableVolunteer');
+                if (enableVolunteer) {
+                    enableVolunteer.checked = settings.enableVolunteer !== false;
+                }
+            }
         }
         
-        // Save settings when changed
-        document.querySelectorAll('.toggle-switch input').forEach(toggle => {
-            toggle.addEventListener('change', function() {
-                const settings = JSON.parse(localStorage.getItem('adminSettings') || '{}');
-                settings[this.id] = this.checked;
-                localStorage.setItem('adminSettings', JSON.stringify(settings));
-                showNotification('Settings saved!', 'success');
-            });
-        });
+        async function saveSettings() {
+            const settings = {
+                chat_page_enabled: document.getElementById('chatPageEnabled').checked.toString(),
+                email_notifications: document.getElementById('emailNotifications').checked.toString(),
+                show_health_camps: document.getElementById('showHealthCamps').checked.toString(),
+                show_news: document.getElementById('showNews').checked.toString()
+            };
+            
+            const enableVolunteer = document.getElementById('enableVolunteer');
+            if (enableVolunteer) {
+                settings.enable_volunteer = enableVolunteer.checked.toString();
+            }
+            
+            try {
+                const response = await fetch('/api/settings', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-Key': getApiKey()
+                    },
+                    body: JSON.stringify(settings)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification('Settings saved successfully!', 'success');
+                    
+                    // Also save to localStorage for backwards compatibility
+                    localStorage.setItem('adminSettings', JSON.stringify({
+                        chatPageEnabled: document.getElementById('chatPageEnabled').checked,
+                        emailNotifications: document.getElementById('emailNotifications').checked,
+                        showHealthCamps: document.getElementById('showHealthCamps').checked,
+                        showNews: document.getElementById('showNews').checked,
+                        enableVolunteer: enableVolunteer ? enableVolunteer.checked : true
+                    }));
+                } else {
+                    showNotification(result.error || 'Failed to save settings', 'error');
+                }
+            } catch (error) {
+                console.error('Error saving settings:', error);
+                showNotification('Error saving settings', 'error');
+            }
+        }
         
         // Account form
         document.getElementById('accountForm').addEventListener('submit', function(e) {

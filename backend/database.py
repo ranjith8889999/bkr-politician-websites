@@ -279,8 +279,8 @@ class Database:
         
         query = """
             INSERT INTO news 
-            (title, category, summary, content, status, date)
-            VALUES (%s, %s, %s, %s, %s, %s)
+            (title, category, summary, content, image_url, status, date)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
             RETURNING id
         """
         
@@ -289,6 +289,7 @@ class Database:
             data.get('category'),
             data.get('summary', ''),
             data.get('content'),
+            data.get('image_url', ''),
             data.get('status', 'published'),
             data.get('date', datetime.now().strftime('%Y-%m-%d'))
         ))
@@ -305,8 +306,8 @@ class Database:
         
         query = """
             UPDATE news 
-            SET title = %s, category = %s, summary = %s, content = %s, status = %s,
-                updated_at = CURRENT_TIMESTAMP
+            SET title = %s, category = %s, summary = %s, content = %s, 
+                image_url = %s, status = %s, updated_at = CURRENT_TIMESTAMP
             WHERE id = %s
         """
         
@@ -315,6 +316,7 @@ class Database:
             data.get('category'),
             data.get('summary', ''),
             data.get('content'),
+            data.get('image_url', ''),
             data.get('status', 'published'),
             news_id
         ))
@@ -374,3 +376,149 @@ class Database:
         
         conn.close()
         return stats
+    
+    # ==================== CHAT CONVERSATIONS ====================
+    
+    def create_chat_session(self, user_data=None):
+        """Create a new chat session"""
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        
+        session_id = user_data.get('session_id') if user_data and user_data.get('session_id') else None
+        
+        query = """
+            INSERT INTO chat_conversations 
+            (session_id, user_ip, user_agent, created_at, updated_at)
+            VALUES (%s, %s, %s, NOW(), NOW())
+            RETURNING session_id
+        """
+        
+        cursor.execute(query, (
+            session_id,
+            user_data.get('ip', '') if user_data else '',
+            user_data.get('user_agent', '') if user_data else ''
+        ))
+        
+        session_id = cursor.fetchone()[0]
+        conn.commit()
+        conn.close()
+        return session_id
+    
+    def get_chat_history(self, session_id, limit=50):
+        """Get chat history for a session"""
+        conn = self.get_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        
+        query = """
+            SELECT * FROM chat_messages 
+            WHERE session_id = %s 
+            ORDER BY created_at ASC
+            LIMIT %s
+        """
+        
+        cursor.execute(query, (session_id, limit))
+        messages = [dict(row) for row in cursor.fetchall()]
+        conn.close()
+        return messages
+    
+    def save_chat_message(self, session_id, role, content, tokens_used=None):
+        """Save a chat message"""
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        
+        query = """
+            INSERT INTO chat_messages 
+            (session_id, role, content, tokens_used, created_at)
+            VALUES (%s, %s, %s, %s, NOW())
+            RETURNING id
+        """
+        
+        cursor.execute(query, (session_id, role, content, tokens_used))
+        message_id = cursor.fetchone()[0]
+        
+        # Update conversation's updated_at
+        cursor.execute(
+            "UPDATE chat_conversations SET updated_at = NOW() WHERE session_id = %s",
+            (session_id,)
+        )
+        
+        conn.commit()
+        conn.close()
+        return message_id
+    
+    def get_chat_stats(self):
+        """Get statistics about chat usage"""
+        conn = self.get_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        
+        stats = {}
+        
+        # Total conversations
+        cursor.execute("SELECT COUNT(*) as count FROM chat_conversations")
+        stats['total_conversations'] = cursor.fetchone()['count']
+        
+        # Total messages
+        cursor.execute("SELECT COUNT(*) as count FROM chat_messages")
+        stats['total_messages'] = cursor.fetchone()['count']
+        
+        # Average messages per conversation
+        cursor.execute("""
+            SELECT AVG(msg_count) as avg_messages
+            FROM (
+                SELECT COUNT(*) as msg_count 
+                FROM chat_messages 
+                GROUP BY session_id
+            ) as counts
+        """)
+        avg = cursor.fetchone()['avg_messages']
+        stats['avg_messages_per_conversation'] = round(float(avg), 1) if avg else 0
+        
+        conn.close()
+        return stats
+    
+    # ==================== SETTINGS ====================
+    
+    def get_settings(self):
+        """Get all settings"""
+        conn = self.get_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cursor.execute("SELECT * FROM settings")
+        settings = [dict(row) for row in cursor.fetchall()]
+        conn.close()
+        return settings
+    
+    def get_setting(self, key):
+        """Get a specific setting value"""
+        conn = self.get_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cursor.execute("SELECT setting_value FROM settings WHERE setting_key = %s", (key,))
+        result = cursor.fetchone()
+        conn.close()
+        return result['setting_value'] if result else None
+    
+    def update_setting(self, key, value):
+        """Update a setting value"""
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        
+        query = """
+            INSERT INTO settings (setting_key, setting_value, updated_at)
+            VALUES (%s, %s, CURRENT_TIMESTAMP)
+            ON CONFLICT (setting_key) 
+            DO UPDATE SET setting_value = EXCLUDED.setting_value, 
+                         updated_at = CURRENT_TIMESTAMP
+        """
+        
+        cursor.execute(query, (key, value))
+        conn.commit()
+        conn.close()
+        return True
+    
+    def get_news_by_id(self, news_id):
+        """Get a single news article by ID"""
+        conn = self.get_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cursor.execute("SELECT * FROM news WHERE id = %s", (news_id,))
+        news = cursor.fetchone()
+        conn.close()
+        return dict(news) if news else None

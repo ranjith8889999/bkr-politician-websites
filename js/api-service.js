@@ -12,8 +12,13 @@ const API_CONFIG = {
     baseURL: isLocalhost 
         ? 'http://localhost:5000/api' 
         : '/api',  // Relative URL - same server serves frontend and API
-    apiKey: 'bkr-secret-key-2025-change-in-production', // Should match backend/.env or API_KEY environment variable
-    timeout: 10000
+    timeout: 10000,
+    // API key will be loaded from server config
+    get apiKey() {
+        return window.APP_CONFIG && window.APP_CONFIG.apiKey 
+            ? window.APP_CONFIG.apiKey 
+            : 'bkr-secret-key-2024'; // Fallback only
+    }
 };
 
 // =============================================

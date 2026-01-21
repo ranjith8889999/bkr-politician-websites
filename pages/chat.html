@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat | B Kishore Reddy</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/nav-actions.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f9fafb;
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #1f2937;
+            padding-top: 80px; /* Space for fixed navbar */
+        }
+
+        /* Override navbar to be fixed */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(30, 58, 95, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+            padding: 10px 0;
+        }
+
+        .navbar.scrolled {
+            background: rgba(30, 58, 95, 0.98);
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Chat Container */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 80px);
+            background: #f9fafb;
+        }
+
+        /* Welcome Screen */
+        .welcome-screen {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .welcome-screen.hidden {
+            display: none;
+        }
+
+        .welcome-title {
+            font-size: 32px;
+            font-weight: 400;
+            color: #1f2937;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        /* Messages Area */
+        .messages-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px 20px;
+            scroll-behavior: smooth;
+            max-width: 768px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .messages-area.hidden {
+            display: none;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .user-message .message-avatar {
+            background: #10b981;
+            color: white;
+        }
+
+        .ai-message .message-avatar {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-text {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #1f2937;
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-top: 6px;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 12px;
+            padding: 0 20px 20px;
+            max-width: 768px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .typing-indicator.show {
+            display: flex;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: #9ca3af;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-6px);
+            }
+        }
+
+        /* Input Area */
+        .input-area {
+            padding: 20px;
+            background: #f9fafb;
+        }
+
+        .input-container {
+            max-width: 768px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .input-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+            justify-content: flex-end;
+        }
+
+        .new-chat-btn {
+            background: white;
+            border: 1px solid #d1d5db;
+            color: #6b7280;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .new-chat-btn:hover {
+            background: #f3f4f6;
+            border-color: #9ca3af;
+            color: #1f2937;
+        }
+
+        .new-chat-btn i {
+            font-size: 12px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .input-wrapper:focus-within {
+            border-color: #9ca3af;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        }
+
+        .add-btn {
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            cursor: pointer;
+            font-size: 20px;
+            padding: 8px;
+            margin-right: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .add-btn:hover {
+            color: #1f2937;
+        }
+
+        #messageInput {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            resize: none;
+            background: transparent;
+            max-height: 120px;
+        }
+
+        #messageInput::placeholder {
+            color: #9ca3af;
+        }
+
+        #sendButton {
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 8px;
+            margin-left: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        #sendButton:hover:not(:disabled) {
+            color: #1f2937;
+        }
+
+        #sendButton:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        #sendButton.active {
+            background: #1f2937;
+            color: white;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+        }
+
+        /* Scrollbar */
+        .messages-area::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .messages-area::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .messages-area::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 3px;
+        }
+
+        .messages-area::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .chat-header {
+                padding: 10px 12px;
+            }
+
+            .brand-text {
+                font-size: 14px;
+            }
+
+            .back-home {
+                padding: 5px 10px;
+                font-size: 12px;
+            }
+
+            .welcome-title {
+                font-size: 24px;
+            }
+
+            .messages-area {
+                padding: 20px 16px;
+            }
+
+            .input-area {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="../index.html" class="logo">
+                <span class="logo-text">B<span class="highlight">K</span>R</span>
+            </a>
+            <div class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="../index.html#home" class="nav-link">Home</a></li>
+                <li><a href="../index.html#about" class="nav-link">About</a></li>
+                <li><a href="../index.html#journey" class="nav-link">Journey</a></li>
+                <li class="nav-dropdown">
+                    <a href="#" class="nav-link">Our Vision <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="../index.html#initiatives">Initiatives</a></li>
+                        <li><a href="../index.html#agendas">Agendas</a></li>
+                    </ul>
+                </li>
+                <li><a href="../index.html#gallery" class="nav-link">Gallery</a></li>
+                <li class="nav-dropdown">
+                    <a href="#" class="nav-link">Seva Services <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="../index.html#health-camps">Health Camps</a></li>
+                        <li><a href="../index.html#testimonials">Testimonials</a></li>
+                    </ul>
+                </li>
+                <li class="nav-dropdown">
+                    <a href="#" class="nav-link">Connect <i class="fas fa-chevron-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="https://wa.me/919XXXXXX363" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp Connect</a></li>
+                        <li><a href="complaint.html"><i class="fas fa-file-alt"></i> File Complaint</a></li>
+                        <li><a href="feedback.html"><i class="fas fa-comment"></i> Share Feedback</a></li>
+                        <li><a href="../index.html#news">News</a></li>
+                        <li><a href="../index.html#contact">Contact</a></li>
+                    </ul>
+                </li>
+                <li class="nav-actions">
+                    <a href="chat.html" class="nav-ai-btn active">
+                        <span class="ai-pulse"></span>
+                        <i class="fas fa-robot"></i>
+                        <span class="ai-text">AI</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Chat Container -->
+    <div class="chat-container">
+        <!-- Welcome Screen -->
+        <div class="welcome-screen" id="welcomeScreen">
+            <h1 class="welcome-title">BKR AI V1.0</h1>
+        </div>
+
+        <!-- Messages Area -->
+        <div class="messages-area hidden" id="messagesArea"></div>
+
+        <!-- Typing Indicator -->
+        <div class="typing-indicator" id="typingIndicator">
+            <div class="message-avatar" style="background: #3b82f6; color: white;">
+                AI
+            </div>
+            <div class="typing-dots">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="input-area">
+            <div class="input-container">
+                <div class="input-actions">
+                    <button class="new-chat-btn" onclick="startNewChat()">
+                        <i class="fas fa-plus"></i>
+                        New Chat
+                    </button>
+                </div>
+                <div class="input-wrapper">
+                    <textarea 
+                        id="messageInput" 
+                        placeholder="BKR AI v1.0"
+                        rows="1"
+                    ></textarea>
+                    <button id="sendButton">
+                        <i class="fas fa-arrow-up"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let sessionId = null;
+        const API_BASE = 'http://localhost:5000/api';
+
+        // Initialize session on page load
+        async function initSession() {
+            try {
+                const response = await fetch(`${API_BASE}/chat/session`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await response.json();
+                if (data.success) {
+                    sessionId = data.session_id;
+                    console.log('Session initialized:', sessionId);
+                }
+            } catch (error) {
+                console.error('Error initializing session:', error);
+            }
+        }
+
+        // Send message
+        async function sendMessage(message) {
+            if (!message.trim()) return;
+
+            // Hide welcome screen
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            const messagesArea = document.getElementById('messagesArea');
+            messagesArea.classList.remove('hidden');
+
+            // Display user message
+            displayMessage(message, 'user');
+
+            // Clear input
+            document.getElementById('messageInput').value = '';
+
+            // Show typing indicator
+            document.getElementById('typingIndicator').classList.add('show');
+
+            // Disable send button
+            document.getElementById('sendButton').disabled = true;
+
+            try {
+                const response = await fetch(`${API_BASE}/chat/message`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: message,
+                        session_id: sessionId
+                    })
+                });
+
+                const data = await response.json();
+
+                // Hide typing indicator
+                document.getElementById('typingIndicator').classList.remove('show');
+
+                if (data.success) {
+                    // Update session ID if new
+                    if (data.session_id) {
+                        sessionId = data.session_id;
+                    }
+                    // Display AI response
+                    displayMessage(data.message, 'ai');
+                } else {
+                    displayMessage('Sorry, I encountered an error. Please try again.', 'ai');
+                }
+            } catch (error) {
+                console.error('Error sending message:', error);
+                document.getElementById('typingIndicator').classList.remove('show');
+                displayMessage('Sorry, I could not connect to the server. Please try again.', 'ai');
+            } finally {
+                // Enable send button
+                document.getElementById('sendButton').disabled = false;
+            }
+        }
+
+        // Display message in chat
+        function displayMessage(text, type) {
+            const messagesArea = document.getElementById('messagesArea');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}-message`;
+
+            const now = new Date();
+            const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+            messageDiv.innerHTML = `
+                <div class="message-avatar">
+                    ${type === 'user' ? 'You' : 'AI'}
+                </div>
+                <div class="message-content">
+                    <div class="message-text">${formatMessage(text)}</div>
+                    <div class="message-time">${time}</div>
+                </div>
+            `;
+
+            messagesArea.appendChild(messageDiv);
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+        }
+
+        // Format message with basic markdown support
+        function formatMessage(text) {
+            // Bold
+            text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            // Italic
+            text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            // Links
+            text = text.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
+            // Line breaks
+            text = text.replace(/\n/g, '<br>');
+            return text;
+        }
+
+        // Send suggestion
+        function sendSuggestion(text) {
+            sendMessage(text);
+        }
+
+        // Start new chat
+        function startNewChat() {
+            // Clear messages
+            const messagesArea = document.getElementById('messagesArea');
+            messagesArea.innerHTML = '';
+            messagesArea.classList.add('hidden');
+            
+            // Show welcome screen
+            document.getElementById('welcomeScreen').classList.remove('hidden');
+            
+            // Clear input
+            document.getElementById('messageInput').value = '';
+            
+            // Initialize new session
+            initSession();
+            
+            console.log('New chat started');
+        }
+
+        // Event listeners
+        document.getElementById('sendButton').addEventListener('click', () => {
+            const message = document.getElementById('messageInput').value;
+            sendMessage(message);
+        });
+
+        document.getElementById('messageInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                const message = document.getElementById('messageInput').value;
+                sendMessage(message);
+            }
+        });
+
+        // Auto-resize textarea
+        document.getElementById('messageInput').addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 150) + 'px';
+        });
+
+        // Toggle send button active state
+        document.getElementById('messageInput').addEventListener('input', function() {
+            const sendBtn = document.getElementById('sendButton');
+            if (this.value.trim()) {
+                sendBtn.classList.add('active');
+            } else {
+                sendBtn.classList.remove('active');
+            }
+        });
+
+        // Initialize session when page loads
+        initSession();
+
+        // Navbar toggle functionality
+        const navToggle = document.getElementById('navToggle');
+        const navMenu = document.getElementById('navMenu');
+
+        if (navToggle) {
+            navToggle.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+                navToggle.classList.toggle('active');
+            });
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!navToggle.contains(e.target) && !navMenu.contains(e.target)) {
+                navMenu.classList.remove('active');
+                navToggle.classList.remove('active');
+            }
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>
