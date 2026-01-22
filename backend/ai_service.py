@@ -6,6 +6,7 @@ Implements RAG-like approach with website data
 
 import os
 from groq import Groq
+import httpx
 from website_data import (
     SYSTEM_PROMPT, 
     get_all_website_data,
@@ -29,7 +30,9 @@ class AIService:
             raise ValueError('GROQ_API_KEY must be set in environment variables')
         
         
-        self.client = Groq(api_key=api_key)
+        http_client = httpx.Client(proxies=None)
+
+        self.client = Groq(api_key=api_key, http_client=http_client)
         self.model = "llama-3.1-8b-instant"
         self.db = db
         self.website_context = get_all_website_data(db)
