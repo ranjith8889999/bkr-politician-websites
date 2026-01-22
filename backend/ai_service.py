@@ -28,6 +28,7 @@ class AIService:
         if not api_key:
             raise ValueError('GROQ_API_KEY must be set in environment variables')
         
+        
         self.client = Groq(api_key=api_key)
         self.model = "llama-3.1-8b-instant"
         self.db = db
