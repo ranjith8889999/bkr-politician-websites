@@ -157,6 +157,7 @@ For upcoming health camp details, please check our website's Health Camps sectio
         all_camps = db.get_health_camps()
         total_camps = len(all_camps)
         
+        
         if total_camps == 0:
             return """
 BKR Foundation regularly organizes FREE Health Camps across Quthbullapur constituency.
@@ -272,6 +273,8 @@ BKR Foundation regularly organizes FREE Health Camps across Quthbullapur constit
 - Dental check-ups
 
 📞 For more information, contact us or visit our website's Health Camps section.
+
+Please note that donot hallucinate any info related to health camps beyond what is provided here. Provide only information from {all_camps} and under any circumstances do not provide other details.
 """
         
         return info
