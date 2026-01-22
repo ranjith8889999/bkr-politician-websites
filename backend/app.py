@@ -26,13 +26,14 @@ app = Flask(__name__,
 
 # Configure CORS - allow requests from frontend
 # Get allowed origins from environment variable or use defaults
-cors_origins = os.getenv('CORS_ORIGINS', 'http://localhost:8080,http://127.0.0.1:8080').split(',')
+cors_origins = os.getenv('CORS_ORIGINS', 'http://localhost:8080,http://127.0.0.1:8080,https://affiliate-bkr.nwp2mw.easypanel.host').split(',')
 
 CORS(app, resources={
     r"/api/*": {
         "origins": cors_origins if cors_origins != ['*'] else "*",
         "methods": ["GET", "POST", "PUT", "DELETE", "PATCH"],
-        "allow_headers": ["Content-Type", "X-API-Key"]
+        "allow_headers": ["Content-Type", "X-API-Key"],
+        "supports_credentials": True
     }
 })
 

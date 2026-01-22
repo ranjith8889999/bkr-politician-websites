@@ -461,7 +461,9 @@
 
     <script>
         let sessionId = null;
-        const API_BASE = 'http://localhost:5000/api';
+        // Auto-detect API URL based on environment
+        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const API_BASE = isLocalhost ? 'http://localhost:5000/api' : '/api';
 
         // Initialize session on page load
         async function initSession() {
