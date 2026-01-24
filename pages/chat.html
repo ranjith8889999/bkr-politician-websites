@@ -18,7 +18,7 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #f9fafb;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             overflow-x: hidden;
             color: #1f2937;
@@ -32,15 +32,16 @@
             left: 0;
             right: 0;
             z-index: 1000;
-            background: rgba(30, 58, 95, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+            background: rgba(30, 58, 95, 0.85);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
             padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .navbar.scrolled {
-            background: rgba(30, 58, 95, 0.98);
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+            background: rgba(30, 58, 95, 0.95);
+            box-shadow: 0 5px 35px rgba(0, 0, 0, 0.25);
         }
 
         /* Chat Container */
@@ -48,7 +49,7 @@
             display: flex;
             flex-direction: column;
             height: calc(100vh - 80px);
-            background: #f9fafb;
+            background: transparent;
         }
 
         /* Welcome Screen */
@@ -66,11 +67,25 @@
         }
 
         .welcome-title {
-            font-size: 32px;
-            font-weight: 400;
-            color: #1f2937;
+            font-size: 48px;
+            font-weight: 700;
+            color: white;
             margin-bottom: 40px;
             text-align: center;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2), 0 0 40px rgba(255, 255, 255, 0.3);
+            animation: fadeInScale 0.6s ease-out;
+            letter-spacing: 2px;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         /* Messages Area */
@@ -79,9 +94,12 @@
             overflow-y: auto;
             padding: 30px 20px;
             scroll-behavior: smooth;
-            max-width: 768px;
+            max-width: 1000px;
             width: 100%;
             margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px 20px 0 0;
         }
 
         .messages-area.hidden {
@@ -92,57 +110,184 @@
             display: flex;
             gap: 12px;
             margin-bottom: 24px;
-            animation: slideIn 0.3s ease;
+            animation: slideInMessage 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        @keyframes slideIn {
+        @keyframes slideInMessage {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+                transform: translateY(20px) scale(0.95);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
             }
         }
 
         .message-avatar {
-            width: 32px;
-            height: 32px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 12px;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: transform 0.2s ease;
+        }
+
+        .message-avatar:hover {
+            transform: scale(1.1);
         }
 
         .user-message .message-avatar {
-            background: #10b981;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
         }
 
         .ai-message .message-avatar {
-            background: #3b82f6;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             color: white;
         }
 
         .message-content {
             flex: 1;
+            background: white;
+            padding: 14px 18px;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .user-message .message-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .ai-message .message-content {
+            background: white;
         }
 
         .message-text {
             font-size: 15px;
-            line-height: 1.6;
+            line-height: 1.7;
             color: #1f2937;
+        }
+
+        .user-message .message-text {
+            color: white;
+        }
+
+        .message-text a {
+            color: #667eea;
+            text-decoration: underline;
+            transition: color 0.2s ease;
+        }
+
+        .message-text a:hover {
+            color: #764ba2;
+        }
+
+        .user-message .message-text a {
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+        }
+
+        .user-message .message-text a:hover {
+            color: white;
+        }
+
+        .message-text strong {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .user-message .message-text strong {
+            color: white;
+            font-weight: 700;
+        }
+
+        .message-text em {
+            font-style: italic;
+            color: #4b5563;
+        }
+
+        .user-message .message-text em {
+            color: rgba(255, 255, 255, 0.95);
         }
 
         .message-time {
             font-size: 11px;
             color: #9ca3af;
-            margin-top: 6px;
+            margin-top: 8px;
         }
+
+        .user-message .message-time {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Typing cursor animation */
+        .typing-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1em;
+            background: #667eea;
+            margin-left: 2px;
+            animation: blink 0.7s infinite;
+        }
+
+        @keyframes blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+
+        /* Floating particles background */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-10vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .particle:nth-child(1) { left: 10%; width: 80px; height: 80px; animation-duration: 25s; animation-delay: 0s; }
+        .particle:nth-child(2) { left: 20%; width: 60px; height: 60px; animation-duration: 20s; animation-delay: 2s; }
+        .particle:nth-child(3) { left: 30%; width: 40px; height: 40px; animation-duration: 30s; animation-delay: 4s; }
+        .particle:nth-child(4) { left: 40%; width: 50px; height: 50px; animation-duration: 22s; animation-delay: 1s; }
+        .particle:nth-child(5) { left: 50%; width: 70px; height: 70px; animation-duration: 28s; animation-delay: 3s; }
+        .particle:nth-child(6) { left: 60%; width: 45px; height: 45px; animation-duration: 26s; animation-delay: 5s; }
+        .particle:nth-child(7) { left: 70%; width: 55px; height: 55px; animation-duration: 24s; animation-delay: 2.5s; }
+        .particle:nth-child(8) { left: 80%; width: 65px; height: 65px; animation-duration: 27s; animation-delay: 1.5s; }
+        .particle:nth-child(9) { left: 90%; width: 50px; height: 50px; animation-duration: 23s; animation-delay: 4.5s; }
+        .particle:nth-child(10) { left: 15%; width: 35px; height: 35px; animation-duration: 29s; animation-delay: 0.5s; }
 
         /* Typing Indicator */
         .typing-indicator {
@@ -150,26 +295,51 @@
             align-items: center;
             gap: 12px;
             padding: 0 20px 20px;
-            max-width: 768px;
+            max-width: 800px;
             width: 100%;
             margin: 0 auto;
         }
 
         .typing-indicator.show {
             display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .typing-indicator .message-avatar {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 6px 20px rgba(240, 147, 251, 0.4);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .typing-dots {
             display: flex;
-            gap: 4px;
+            gap: 6px;
+            background: white;
+            padding: 12px 18px;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .typing-dot {
-            width: 6px;
-            height: 6px;
-            background: #9ca3af;
+            width: 8px;
+            height: 8px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             border-radius: 50%;
-            animation: typing 1.4s infinite;
+            animation: typing 1.4s infinite ease-in-out;
         }
 
         .typing-dot:nth-child(2) {
@@ -183,51 +353,53 @@
         @keyframes typing {
             0%, 60%, 100% {
                 transform: translateY(0);
+                opacity: 0.4;
             }
             30% {
-                transform: translateY(-6px);
+                transform: translateY(-10px);
+                opacity: 1;
             }
         }
 
         /* Input Area */
         .input-area {
             padding: 20px;
-            background: #f9fafb;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
         }
 
         .input-container {
-            max-width: 768px;
+            max-width: 800px;
             margin: 0 auto;
             position: relative;
         }
 
-        .input-actions {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 12px;
-            justify-content: flex-end;
-        }
-
         .new-chat-btn {
-            background: white;
-            border: 1px solid #d1d5db;
-            color: #6b7280;
-            padding: 8px 16px;
+            background: transparent;
+            border: none;
+            color: #667eea;
+            padding: 8px 12px;
             border-radius: 20px;
             cursor: pointer;
             font-size: 13px;
-            font-weight: 500;
-            transition: all 0.2s ease;
+            font-weight: 600;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             gap: 6px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            flex-shrink: 0;
+            margin-right: 8px;
+            border-right: 1px solid #e5e7eb;
+            padding-right: 12px;
         }
 
         .new-chat-btn:hover {
             background: #f3f4f6;
-            border-color: #9ca3af;
-            color: #1f2937;
+            color: #764ba2;
+        }
+
+        .new-chat-btn i {
+            font-size: 14px;
         }
 
         .new-chat-btn i {
@@ -237,18 +409,19 @@
         .input-wrapper {
             position: relative;
             background: white;
-            border: 1px solid #d1d5db;
-            border-radius: 24px;
+            border: 2px solid transparent;
+            border-radius: 28px;
             display: flex;
             align-items: center;
-            padding: 12px 16px;
-            transition: all 0.2s ease;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            padding: 8px 12px 8px 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
         }
 
         .input-wrapper:focus-within {
-            border-color: #9ca3af;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            border-color: #667eea;
+            box-shadow: 0 6px 24px rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px);
         }
 
         .add-btn {
@@ -278,6 +451,7 @@
             resize: none;
             background: transparent;
             max-height: 120px;
+            padding: 6px 8px;
         }
 
         #messageInput::placeholder {
@@ -287,7 +461,7 @@
         #sendButton {
             background: transparent;
             border: none;
-            color: #6b7280;
+            color: #9ca3af;
             cursor: pointer;
             font-size: 18px;
             padding: 8px;
@@ -295,11 +469,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
         }
 
         #sendButton:hover:not(:disabled) {
-            color: #1f2937;
+            background: #f3f4f6;
+            color: #667eea;
         }
 
         #sendButton:disabled {
@@ -308,33 +486,41 @@
         }
 
         #sendButton.active {
-            background: #1f2937;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        #sendButton.active:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
         }
 
         /* Scrollbar */
         .messages-area::-webkit-scrollbar {
-            width: 6px;
+            width: 8px;
         }
 
         .messages-area::-webkit-scrollbar-track {
-            background: transparent;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
         }
 
         .messages-area::-webkit-scrollbar-thumb {
-            background: #d1d5db;
-            border-radius: 3px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
         }
 
         .messages-area::-webkit-scrollbar-thumb:hover {
-            background: #9ca3af;
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
         }
 
         /* Mobile Responsive */
         @media (max-width: 768px) {
+            body {
+                padding-top: 70px;
+            }
+
             .chat-header {
                 padding: 10px 12px;
             }
@@ -349,20 +535,106 @@
             }
 
             .welcome-title {
-                font-size: 24px;
+                font-size: 36px;
             }
 
             .messages-area {
                 padding: 20px 16px;
+                border-radius: 15px 15px 0 0;
             }
 
             .input-area {
                 padding: 16px;
             }
+
+            .message {
+                gap: 10px;
+            }
+
+            .message-avatar {
+                width: 36px;
+                height: 36px;
+                font-size: 11px;
+            }
+
+            .message-content {
+                padding: 12px 16px;
+            }
+
+            .message-text {
+                font-size: 14px;
+            }
+
+            .new-chat-btn {
+                padding: 6px 10px;
+                margin-right: 6px;
+                padding-right: 10px;
+            }
+
+            .new-chat-btn i {
+                font-size: 13px;
+            }
+
+            #messageInput {
+                font-size: 14px;
+            }
+        }
+
+        /* Scroll to bottom button */
+        .scroll-to-bottom {
+            position: fixed;
+            bottom: 140px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .scroll-to-bottom.show {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .scroll-to-bottom:hover {
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .scroll-to-bottom i {
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
+    <!-- Floating particles background -->
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
     <!-- Navigation -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
@@ -416,6 +688,12 @@
 
     <!-- Chat Container -->
     <div class="chat-container">
+        <!-- Scroll to bottom button -->
+        <button class="scroll-to-bottom" id="scrollToBottomBtn" onclick="scrollToBottom()">
+            <i class="fas fa-arrow-down"></i>
+            <span>New message</span>
+        </button>
+
         <!-- Welcome Screen -->
         <div class="welcome-screen" id="welcomeScreen">
             <h1 class="welcome-title">BKR AI V1.0</h1>
@@ -426,7 +704,7 @@
 
         <!-- Typing Indicator -->
         <div class="typing-indicator" id="typingIndicator">
-            <div class="message-avatar" style="background: #3b82f6; color: white;">
+            <div class="message-avatar" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
                 AI
             </div>
             <div class="typing-dots">
@@ -439,16 +717,13 @@
         <!-- Input Area -->
         <div class="input-area">
             <div class="input-container">
-                <div class="input-actions">
-                    <button class="new-chat-btn" onclick="startNewChat()">
-                        <i class="fas fa-plus"></i>
-                        New Chat
-                    </button>
-                </div>
                 <div class="input-wrapper">
+                    <button class="new-chat-btn" onclick="startNewChat()" title="Start New Chat">
+                        <i class="fas fa-plus"></i>
+                    </button>
                     <textarea 
                         id="messageInput" 
-                        placeholder="BKR AI v1.0"
+                        placeholder="Ask me anything about BKR..."
                         rows="1"
                     ></textarea>
                     <button id="sendButton">
@@ -547,18 +822,109 @@
             const now = new Date();
             const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 
+            const avatarText = type === 'user' ? 'You' : 'AI';
+
             messageDiv.innerHTML = `
                 <div class="message-avatar">
-                    ${type === 'user' ? 'You' : 'AI'}
+                    ${avatarText}
                 </div>
                 <div class="message-content">
-                    <div class="message-text">${formatMessage(text)}</div>
+                    <div class="message-text" id="${type === 'ai' ? 'typing-text-' + Date.now() : ''}"></div>
                     <div class="message-time">${time}</div>
                 </div>
             `;
 
             messagesArea.appendChild(messageDiv);
-            messagesArea.scrollTop = messagesArea.scrollHeight;
+
+            // Use typewriter effect for AI messages, instant display for user messages
+            if (type === 'ai') {
+                const textElement = messageDiv.querySelector('.message-text');
+                typewriterEffect(textElement, formatMessage(text));
+            } else {
+                messageDiv.querySelector('.message-text').innerHTML = formatMessage(text);
+                // For user messages, always scroll to bottom
+                messagesArea.scrollTop = messagesArea.scrollHeight;
+            }
+        }
+
+        // Check if user is at bottom of scroll
+        function isUserAtBottom() {
+            const messagesArea = document.getElementById('messagesArea');
+            const threshold = 100; // pixels from bottom
+            const position = messagesArea.scrollHeight - messagesArea.scrollTop - messagesArea.clientHeight;
+            return position < threshold;
+        }
+
+        // Smart auto-scroll - only scroll if user is already at bottom
+        function smartScroll() {
+            if (isUserAtBottom()) {
+                const messagesArea = document.getElementById('messagesArea');
+                messagesArea.scrollTop = messagesArea.scrollHeight;
+            }
+        }
+
+        // Typewriter effect for AI responses
+        function typewriterEffect(element, text, speed = 20) {
+            let i = 0;
+            let currentHTML = '';
+            const isHTML = /<[^>]*>/g.test(text);
+            
+            if (isHTML) {
+                // Handle HTML content with tags
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = text;
+                const textContent = tempDiv.textContent || tempDiv.innerText;
+                
+                function typeHTML() {
+                    if (i < textContent.length) {
+                        // Find corresponding position in HTML
+                        let charCount = 0;
+                        let htmlPos = 0;
+                        
+                        while (charCount < i && htmlPos < text.length) {
+                            if (text[htmlPos] === '<') {
+                                // Skip HTML tags
+                                while (text[htmlPos] !== '>' && htmlPos < text.length) {
+                                    htmlPos++;
+                                }
+                                htmlPos++;
+                            } else {
+                                charCount++;
+                                htmlPos++;
+                            }
+                        }
+                        
+                        currentHTML = text.substring(0, htmlPos);
+                        element.innerHTML = currentHTML + '<span class="typing-cursor">|</span>';
+                        i++;
+                        
+                        // Smart auto-scroll - only if user is at bottom
+                        smartScroll();
+                        
+                        setTimeout(typeHTML, speed);
+                    } else {
+                        element.innerHTML = text;
+                    }
+                }
+                typeHTML();
+            } else {
+                // Handle plain text
+                function typePlain() {
+                    if (i < text.length) {
+                        currentHTML += text.charAt(i);
+                        element.innerHTML = currentHTML + '<span class="typing-cursor">|</span>';
+                        i++;
+                        
+                        // Smart auto-scroll - only if user is at bottom
+                        smartScroll();
+                        
+                        setTimeout(typePlain, speed);
+                    } else {
+                        element.innerHTML = text;
+                    }
+                }
+                typePlain();
+            }
         }
 
         // Format message with basic markdown support
@@ -659,6 +1025,29 @@
                 navbar.classList.remove('scrolled');
             }
         });
+
+        // Scroll to bottom function
+        function scrollToBottom() {
+            const messagesArea = document.getElementById('messagesArea');
+            messagesArea.scrollTo({
+                top: messagesArea.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
+
+        // Show/hide scroll to bottom button
+        const messagesArea = document.getElementById('messagesArea');
+        const scrollBtn = document.getElementById('scrollToBottomBtn');
+
+        if (messagesArea) {
+            messagesArea.addEventListener('scroll', () => {
+                if (!isUserAtBottom()) {
+                    scrollBtn.classList.add('show');
+                } else {
+                    scrollBtn.classList.remove('show');
+                }
+            });
+        }
     </script>
 </body>
 </html>
