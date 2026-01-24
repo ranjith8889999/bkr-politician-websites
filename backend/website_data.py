@@ -16,14 +16,14 @@ KISHORE_REDDY_INFO = {
     B Kishore Reddy is a dedicated Congress leader and Youth President for Quthbullapur Constituency. 
     He is committed to serving the people with honesty, development, and youth empowerment. 
     With 18 years of experience in politics, he has served over 50,000 people and organized 
-    more than 100 health camps. He has participated in 5 elections and continues to work 
+    more than 30 health camps. He has participated in 5 elections and continues to work 
     towards a better Quthbullapur.
     """,
     
     "experience": {
         "years_in_politics": 18,
-        "people_served": 50000,
-        "health_camps_organized": 100,
+        "people_served": 5000,
+        "health_camps_organized": 30,
         "elections_participated": 5
     },
     
@@ -157,7 +157,7 @@ For upcoming health camp details, please check our website's Health Camps sectio
         all_camps = db.get_health_camps()
         total_camps = len(all_camps)
         
-        
+
         if total_camps == 0:
             return """
 BKR Foundation regularly organizes FREE Health Camps across Quthbullapur constituency.
