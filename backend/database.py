@@ -252,6 +252,56 @@ class Database:
         conn.close()
         return feedback_id
     
+    # ==================== SKILLS FOR YOUTH REGISTRATION ====================
+    
+    def create_skills_registration(self, data):
+        """Create new skills for youth registration"""
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        
+        query = """
+            INSERT INTO skills_registrations 
+            (name, phone, email, dob, education, institution, location, city, motivation, date)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            RETURNING id
+        """
+        
+        cursor.execute(query, (
+            data.get('name'),
+            data.get('phone'),
+            data.get('email'),
+            data.get('dob'),
+            data.get('education'),
+            data.get('institution', ''),
+            data.get('location'),
+            data.get('city'),
+            data.get('motivation', ''),
+            data.get('date', datetime.now().strftime('%Y-%m-%d'))
+        ))
+        
+        registration_id = cursor.fetchone()[0]
+        conn.commit()
+        conn.close()
+        return registration_id
+    
+    def get_skills_registrations(self, status=None, limit=None):
+        """Get all skills registrations or filter by status"""
+        conn = self.get_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        
+        if status:
+            query = "SELECT * FROM skills_registrations WHERE status = %s ORDER BY created_at DESC"
+            cursor.execute(query, (status,))
+        else:
+            query = "SELECT * FROM skills_registrations ORDER BY created_at DESC"
+            if limit:
+                query += f" LIMIT {limit}"
+            cursor.execute(query)
+        
+        registrations = [dict(row) for row in cursor.fetchall()]
+        conn.close()
+        return registrations
+    
     # ==================== NEWS ====================
     
     def get_news(self, status=None, limit=None):

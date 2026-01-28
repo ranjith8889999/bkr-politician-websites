@@ -366,3 +366,187 @@ class EmailService:
         
         msg = self._create_html_email(subject, body_html)
         return self._send_email(self.email_from, msg)
+    
+    def send_skills_registration_confirmation(self, to_email, name, registration_data):
+        """
+        Send skills for youth registration confirmation email to applicant
+        
+        Args:
+            to_email (str): Applicant's email address
+            name (str): Applicant's name
+            registration_data (dict): Full registration data
+        
+        Returns:
+            tuple: (success: bool, message: str)
+        """
+        subject = "Skills for Youth Program - Registration Confirmed"
+        
+        body_html = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                .header {{ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }}
+                .content {{ background: #f8f9fa; padding: 30px; border-radius: 0 0 8px 8px; }}
+                .welcome {{ background: white; padding: 20px; border-radius: 6px; margin-bottom: 20px; text-align: center; }}
+                .details {{ background: white; padding: 20px; border-radius: 6px; margin-bottom: 20px; }}
+                .field {{ margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #e9ecef; }}
+                .label {{ font-weight: bold; color: #667eea; margin-bottom: 5px; }}
+                .value {{ color: #495057; }}
+                .info-box {{ background: #e7f3ff; padding: 20px; border-radius: 6px; border-left: 4px solid #667eea; margin: 20px 0; }}
+                .highlight {{ color: #667eea; font-weight: bold; }}
+                .footer {{ text-align: center; margin-top: 20px; padding: 20px; color: #6c757d; font-size: 12px; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>🎓 Welcome to Skills for Youth!</h1>
+                    <p>B Kishore Reddy Foundation</p>
+                </div>
+                <div class="content">
+                    <div class="welcome">
+                        <h2 style="color: #1e3a5f; margin-bottom: 15px;">Thank You for Registering, {name}!</h2>
+                        <p style="color: #6c757d; font-size: 16px;">Your registration has been successfully received.</p>
+                    </div>
+                    
+                    <div class="details">
+                        <h3 style="color: #1e3a5f; margin-bottom: 20px;">📋 Registration Details</h3>
+                        <div class="field">
+                            <div class="label">Name:</div>
+                            <div class="value">{registration_data.get('name')}</div>
+                        </div>
+                        <div class="field">
+                            <div class="label">Email:</div>
+                            <div class="value">{registration_data.get('email')}</div>
+                        </div>
+                        <div class="field">
+                            <div class="label">Phone:</div>
+                            <div class="value">{registration_data.get('phone')}</div>
+                        </div>
+                        <div class="field">
+                            <div class="label">Location:</div>
+                            <div class="value">{registration_data.get('location')}, {registration_data.get('city')}</div>
+                        </div>
+                        <div class="field" style="border-bottom: none;">
+                            <div class="label">Education:</div>
+                            <div class="value">{registration_data.get('education')}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-box">
+                        <h4 style="color: #1e3a5f; margin-top: 0;">📚 What's Next?</h4>
+                        <p>✓ Your registration is being reviewed by our team</p>
+                        <p>✓ Program dates will be announced soon</p>
+                        <p>✓ You will receive course schedule via email</p>
+                        <p>✓ Our faculty has <span class="highlight">10+ years of experience</span></p>
+                    </div>
+                    
+                    <div class="info-box" style="background: #fff3cd; border-left-color: #ffc107;">
+                        <h4 style="color: #856404; margin-top: 0;">💡 Program Highlights</h4>
+                        <p>• Expert training in Aptitude & Reasoning</p>
+                        <p>• Comprehensive study materials provided</p>
+                        <p>• Mock tests and performance analysis</p>
+                        <p>• Career guidance and counseling</p>
+                        <p>• Job placement assistance</p>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 30px;">
+                        <p style="color: #6c757d;">Questions? Contact us:</p>
+                        <p style="color: #1e3a5f; font-weight: bold;">📧 {self.email_from}</p>
+                    </div>
+                </div>
+                <div class="footer">
+                    <p><strong>B Kishore Reddy Foundation</strong></p>
+                    <p>Empowering Youth • Building Futures</p>
+                    <p style="margin-top: 15px;">This is an automated confirmation email</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        msg = self._create_html_email(subject, body_html)
+        success, message = self._send_email(to_email, msg)
+        
+        # Also send notification to admin
+        if success:
+            self._send_skills_registration_notification(registration_data)
+        
+        return success, message
+    
+    def _send_skills_registration_notification(self, data):
+        """Send internal notification about new skills registration"""
+        subject = f"New Skills Registration - {data.get('name')}"
+        
+        body_html = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                .header {{ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }}
+                .content {{ background: #f8f9fa; padding: 30px; border-radius: 0 0 8px 8px; }}
+                .field {{ margin-bottom: 20px; background: white; padding: 15px; border-radius: 6px; border-left: 4px solid #667eea; }}
+                .label {{ font-weight: bold; color: #667eea; margin-bottom: 5px; }}
+                .value {{ color: #495057; }}
+                .footer {{ text-align: center; margin-top: 20px; padding: 20px; color: #6c757d; font-size: 12px; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>🎓 New Skills for Youth Registration</h1>
+                    <p>From BKR Foundation Website</p>
+                </div>
+                <div class="content">
+                    <div class="field">
+                        <div class="label">👤 Name:</div>
+                        <div class="value">{data.get('name')}</div>
+                    </div>
+                    <div class="field">
+                        <div class="label">📞 Phone:</div>
+                        <div class="value">{data.get('phone')}</div>
+                    </div>
+                    <div class="field">
+                        <div class="label">📧 Email:</div>
+                        <div class="value">{data.get('email')}</div>
+                    </div>
+                    <div class="field">
+                        <div class="label">📅 Date of Birth:</div>
+                        <div class="value">{data.get('dob')}</div>
+                    </div>
+                    <div class="field">
+                        <div class="label">🎓 Education:</div>
+                        <div class="value">{data.get('education')}</div>
+                    </div>
+                    {f'''<div class="field">
+                        <div class="label">🏫 Institution:</div>
+                        <div class="value">{data.get('institution')}</div>
+                    </div>''' if data.get('institution') else ''}
+                    <div class="field">
+                        <div class="label">📍 Location:</div>
+                        <div class="value">{data.get('location')}, {data.get('city')}</div>
+                    </div>
+                    {f'''<div class="field">
+                        <div class="label">💭 Motivation:</div>
+                        <div class="value">{data.get('motivation')}</div>
+                    </div>''' if data.get('motivation') else ''}
+                    <div class="field">
+                        <div class="label">🕒 Submitted:</div>
+                        <div class="value">{datetime.now().strftime('%B %d, %Y at %I:%M %p')}</div>
+                    </div>
+                </div>
+                <div class="footer">
+                    <p>This is an automated message from BKR Foundation Website</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        msg = self._create_html_email(subject, body_html)
+        return self._send_email(self.email_to_helpdesk, msg)

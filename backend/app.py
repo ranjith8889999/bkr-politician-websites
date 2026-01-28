@@ -381,6 +381,51 @@ def create_feedback():
             'error': str(e)
         }), 500
 
+# ==================== SKILLS FOR YOUTH REGISTRATION ====================
+
+@app.route('/api/skills-registration', methods=['POST'])
+def create_skills_registration():
+    """Create new skills for youth registration (Public)"""
+    try:
+        data = request.get_json()
+        
+        # Validate required fields
+        required_fields = ['name', 'phone', 'email', 'dob', 'education', 'location', 'city']
+        for field in required_fields:
+            if not data.get(field):
+                return jsonify({
+                    'success': False,
+                    'error': f'Missing required field: {field}'
+                }), 400
+        
+        # Store registration in database
+        registration_id = db.create_skills_registration(data)
+        
+        # Send confirmation email
+        try:
+            email_sent = email_service.send_skills_registration_confirmation(
+                to_email=data.get('email'),
+                name=data.get('name'),
+                registration_data=data
+            )
+            
+            if not email_sent:
+                print(f"Warning: Failed to send confirmation email to {data.get('email')}")
+        except Exception as email_error:
+            print(f"Email error: {str(email_error)}")
+            # Don't fail the registration if email fails
+        
+        return jsonify({
+            'success': True,
+            'message': 'Registration submitted successfully! You will receive a confirmation email shortly.',
+            'data': {'id': registration_id}
+        }), 201
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
 # ==================== NEWS ENDPOINTS ====================
 
 @app.route('/api/news', methods=['GET'])
@@ -959,6 +1004,49 @@ def get_chat_stats():
             'data': stats
         }), 200
         
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+# ==================== AI COMPLAINT ANALYSIS ====================
+
+@app.route('/api/ai/analyze-complaints', methods=['POST'])
+@require_api_key
+def analyze_complaints():
+    """AI-powered complaint analysis for admin panel"""
+    try:
+        data = request.get_json()
+        
+        if not data.get('message'):
+            return jsonify({
+                'success': False,
+                'error': 'Message is required'
+            }), 400
+        
+        user_message = data.get('message')
+        complaints = data.get('complaints', [])
+        history = data.get('history', [])
+        
+        # Get AI analysis
+        response = ai_service.analyze_complaints(
+            user_message=user_message,
+            complaints=complaints,
+            chat_history=history
+        )
+        
+        if response['success']:
+            return jsonify({
+                'success': True,
+                'response': response['message']
+            }), 200
+        else:
+            return jsonify({
+                'success': False,
+                'error': response.get('error', 'Analysis failed')
+            }), 500
+            
     except Exception as e:
         return jsonify({
             'success': False,

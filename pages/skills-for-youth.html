@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skills for Youth | B Kishore Reddy</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/nav-actions.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .page-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+        }
+
+        .page-header h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .page-header p {
+            font-size: 20px;
+            opacity: 0.95;
+        }
+
+        .info-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-section h2 {
+            font-size: 32px;
+            color: #1e3a5f;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .info-section h2 i {
+            color: #667eea;
+        }
+
+        .info-section p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #4b5563;
+            margin-bottom: 15px;
+        }
+
+        .course-details {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .course-details h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .course-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .course-item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .course-item h4 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .course-item p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .faculty-info {
+            background: #f3f4f6;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .faculty-info strong {
+            color: #667eea;
+            font-size: 18px;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .registration-form {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #1e3a5f;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        .form-group label .required {
+            color: #dc2626;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        select.form-control {
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s ease;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 30px;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: none;
+            border: none;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .modal-close:hover {
+            background: #f3f4f6;
+            color: #1e3a5f;
+            transform: rotate(90deg);
+        }
+
+        .modal h2 {
+            color: #1e3a5f;
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            z-index: 2000;
+            display: none;
+            animation: slideInRight 0.3s ease;
+        }
+
+        .notification.success {
+            border-left: 4px solid #10b981;
+        }
+
+        .notification.error {
+            border-left: 4px solid #dc2626;
+        }
+
+        .notification.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 32px;
+            }
+
+            .info-section {
+                padding: 25px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="../index.html" class="logo">
+                <span class="logo-text">B<span class="highlight">K</span>R</span>
+            </a>
+            <div class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="../index.html" class="nav-link">Home</a></li>
+                <li><a href="../index.html#about" class="nav-link">About</a></li>
+                <li><a href="../index.html#contact" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1><i class="fas fa-graduation-cap"></i> Skills for Youth</h1>
+            <p>Empowering the Next Generation with Essential Skills</p>
+        </div>
+
+        <!-- Information Section -->
+        <div class="info-section">
+            <h2><i class="fas fa-info-circle"></i> About the Program</h2>
+            <p>
+                B Kishore Reddy Foundation is committed to empowering youth with essential skills for their future success. 
+                Our <strong>Skills for Youth</strong> program is designed to provide comprehensive training in aptitude and 
+                reasoning, helping young minds prepare for competitive examinations and career opportunities.
+            </p>
+
+            <div class="course-details">
+                <h3><i class="fas fa-book-open"></i> Course Offerings</h3>
+                <div class="course-list">
+                    <div class="course-item">
+                        <h4><i class="fas fa-brain"></i> Aptitude Training</h4>
+                        <p style="color: white;">Comprehensive training covering quantitative aptitude, logical reasoning, data interpretation, and problem-solving techniques.</p>
+                    </div>
+                    <div class="course-item">
+                        <h4><i class="fas fa-puzzle-piece"></i> Reasoning Skills</h4>
+                        <p style="color: white;">Develop analytical thinking, verbal and non-verbal reasoning, critical thinking, and decision-making abilities.</p>
+                    </div>
+                    <div class="course-item">
+                        <h4><i class="fas fa-chart-line"></i> Competitive Exam Prep</h4>
+                        <p style="color: white;">Specialized coaching for various competitive examinations with mock tests and performance analysis.</p>
+                    </div>
+                    <div class="course-item">
+                        <h4><i class="fas fa-briefcase"></i> Career Guidance</h4>
+                        <p style="color: white;">Professional guidance on career paths, interview skills, and job placement assistance.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faculty-info">
+                <p><strong><i class="fas fa-chalkboard-teacher"></i> Expert Faculty:</strong> Our program is led by experienced faculty members with <strong>10+ years of expertise</strong> in competitive exam training and career counseling.</p>
+                <p><strong><i class="fas fa-calendar-check"></i> Program Schedule:</strong> Dates will be announced soon. Register now to receive updates!</p>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="cta-button" onclick="showCourseDetails()">
+                    <i class="fas fa-info-circle"></i>
+                    View Detailed Course Information
+                </button>
+            </div>
+        </div>
+
+        <!-- Registration Form -->
+        <div class="registration-form">
+            <h2 style="color: #1e3a5f; margin-bottom: 30px; text-align: center;">
+                <i class="fas fa-user-plus"></i> Register for Skills for Youth Program
+            </h2>
+            <form id="skillsRegistrationForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Full Name <span class="required">*</span></label>
+                        <input type="text" class="form-control" name="name" placeholder="Enter your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number <span class="required">*</span></label>
+                        <input type="tel" class="form-control" name="phone" placeholder="10-digit mobile number" pattern="[0-9]{10}" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Email Address <span class="required">*</span></label>
+                        <input type="email" class="form-control" name="email" placeholder="your.email@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Date of Birth <span class="required">*</span></label>
+                        <input type="date" class="form-control" name="dob" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Education Qualification <span class="required">*</span></label>
+                    <select class="form-control" name="education" required>
+                        <option value="">Select your qualification</option>
+                        <option value="10th">10th Standard</option>
+                        <option value="12th">12th Standard</option>
+                        <option value="undergraduate">Undergraduate (Pursuing/Completed)</option>
+                        <option value="postgraduate">Postgraduate (Pursuing/Completed)</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>College/Institution (if applicable)</label>
+                    <input type="text" class="form-control" name="institution" placeholder="Name of your college or institution">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Location/Area <span class="required">*</span></label>
+                        <input type="text" class="form-control" name="location" placeholder="Your area/locality" required>
+                    </div>
+                    <div class="form-group">
+                        <label>City <span class="required">*</span></label>
+                        <input type="text" class="form-control" name="city" placeholder="Your city" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Why do you want to join this program?</label>
+                    <textarea class="form-control" name="motivation" rows="4" placeholder="Tell us about your goals and aspirations..."></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <i class="fas fa-paper-plane"></i>
+                    Submit Registration
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Course Details Modal -->
+    <div class="modal" id="courseModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <h2><i class="fas fa-graduation-cap"></i> Detailed Course Information</h2>
+            
+            <h3 style="color: #667eea; margin-top: 25px;"><i class="fas fa-brain"></i> Aptitude Training</h3>
+            <ul style="line-height: 2; color: #4b5563; margin-left: 20px;">
+                <li><strong>Quantitative Aptitude:</strong> Numbers, Percentages, Profit & Loss, Time & Work, Speed & Distance</li>
+                <li><strong>Data Interpretation:</strong> Tables, Charts, Graphs, Case Studies</li>
+                <li><strong>Problem Solving:</strong> Logical Puzzles, Pattern Recognition, Analytical Skills</li>
+            </ul>
+
+            <h3 style="color: #667eea; margin-top: 25px;"><i class="fas fa-puzzle-piece"></i> Reasoning Skills</h3>
+            <ul style="line-height: 2; color: #4b5563; margin-left: 20px;">
+                <li><strong>Verbal Reasoning:</strong> Analogies, Classification, Series, Coding-Decoding</li>
+                <li><strong>Non-Verbal Reasoning:</strong> Figure Series, Pattern Completion, Mirror Images</li>
+                <li><strong>Critical Thinking:</strong> Statements & Assumptions, Conclusions, Course of Action</li>
+            </ul>
+
+            <h3 style="color: #667eea; margin-top: 25px;"><i class="fas fa-chalkboard-teacher"></i> Faculty Expertise</h3>
+            <p style="line-height: 1.8; color: #4b5563;">
+                Our faculty members bring over <strong>10 years of experience</strong> in training students for:
+            </p>
+            <ul style="line-height: 2; color: #4b5563; margin-left: 20px;">
+                <li>Banking & SSC Examinations</li>
+                <li>UPSC & State PSC Tests</li>
+                <li>Campus Placement Drives</li>
+                <li>Management Entrance Exams</li>
+            </ul>
+
+            <div class="faculty-info" style="margin-top: 25px;">
+                <p><strong><i class="fas fa-calendar"></i> Program Duration:</strong> To be announced</p>
+                <p><strong><i class="fas fa-clock"></i> Class Timings:</strong> Flexible batches (Morning/Evening)</p>
+                <p><strong><i class="fas fa-money-bill"></i> Course Fee:</strong> Subsidized rates for deserving candidates</p>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="cta-button" onclick="closeModal()">
+                    <i class="fas fa-check"></i>
+                    Got It, Let Me Register
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <p id="notificationMessage"></p>
+    </div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/api-service.js"></script>
+    <script src="../js/main.js"></script>
+    <script>
+        // Show course details modal
+        function showCourseDetails() {
+            document.getElementById('courseModal').classList.add('active');
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('courseModal').classList.remove('active');
+        }
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            const modal = document.getElementById('courseModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Show notification
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationMessage = document.getElementById('notificationMessage');
+            
+            notification.className = `notification ${type} active`;
+            notificationMessage.textContent = message;
+            
+            setTimeout(() => {
+                notification.classList.remove('active');
+            }, 5000);
+        }
+
+        // Handle form submission
+        document.getElementById('skillsRegistrationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+            
+            const formData = new FormData(e.target);
+            const data = {
+                name: formData.get('name'),
+                phone: formData.get('phone'),
+                email: formData.get('email'),
+                dob: formData.get('dob'),
+                education: formData.get('education'),
+                institution: formData.get('institution') || '',
+                location: formData.get('location'),
+                city: formData.get('city'),
+
+                motivation: formData.get('motivation') || ''
+            };
+            
+            try {
+                const response = await fetch('/api/skills-registration', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification('✅ Registration successful! You will receive a confirmation email shortly.', 'success');
+                    e.target.reset();
+                    
+                    // Scroll to top
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    showNotification('❌ ' + (result.error || 'Registration failed. Please try again.'), 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('❌ An error occurred. Please try again later.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Registration';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -90,6 +90,25 @@ def create_tables(conn):
         )
     ''')
     
+    # Skills for Youth Registration Table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS skills_registrations (
+            id SERIAL PRIMARY KEY,
+            name VARCHAR(200) NOT NULL,
+            phone VARCHAR(20) NOT NULL,
+            email VARCHAR(200) NOT NULL,
+            dob DATE NOT NULL,
+            education VARCHAR(100) NOT NULL,
+            institution VARCHAR(300),
+            location VARCHAR(200) NOT NULL,
+            city VARCHAR(100) NOT NULL,
+            motivation TEXT,
+            status VARCHAR(50) DEFAULT 'pending',
+            date DATE NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    ''')
+    
     # Insert default settings if they don't exist
     cursor.execute('''
         INSERT INTO settings (setting_key, setting_value, description)
