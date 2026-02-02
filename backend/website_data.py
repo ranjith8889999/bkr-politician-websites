@@ -354,7 +354,7 @@ Key Milestones:
 - Congress Party Youth President for Quthbullapur
 - Participated in 5 elections
 - Served over 50,000 people across the constituency
-- Organized 100+ free health camps
+- Organized 30+ free health camps
 - Active in community development for nearly two decades
 
 His political ideology is rooted in the values of the Indian National Congress, focusing 

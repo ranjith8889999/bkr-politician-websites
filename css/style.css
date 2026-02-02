@@ -1491,6 +1491,225 @@ input, textarea, select {
     transform: translateY(-50%);
 }
 
+/* Media Tabs */
+.media-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+
+.media-tab-btn {
+    padding: 15px 40px;
+    background: var(--white);
+    border: 2px solid var(--primary-blue);
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--primary-blue);
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.media-tab-btn i {
+    font-size: 18px;
+}
+
+.media-tab-btn:hover,
+.media-tab-btn.active {
+    background: var(--primary-blue);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(30, 58, 95, 0.3);
+}
+
+.media-tab-content {
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+.media-tab-content.active {
+    display: block;
+}
+
+/* Videos Grid */
+.videos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.video-item {
+    position: relative;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    cursor: pointer;
+    background: var(--white);
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+}
+
+.video-item:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.video-thumbnail {
+    position: relative;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+    background: #000;
+}
+
+.video-thumbnail video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.video-play-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.video-play-overlay i {
+    font-size: 64px;
+    color: var(--white);
+    transition: var(--transition);
+}
+
+.video-item:hover .video-play-overlay {
+    background: rgba(255, 107, 53, 0.7);
+}
+
+.video-item:hover .video-play-overlay i {
+    transform: scale(1.2);
+    color: var(--white);
+}
+
+.video-info {
+    padding: 20px;
+}
+
+.video-info h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--primary-blue);
+    margin: 0;
+}
+
+/* Video Modal */
+.video-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition);
+}
+
+.video-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.video-modal-content {
+    position: relative;
+    width: 85%;
+    max-width: 1000px;
+    padding: 60px 20px 20px;
+    margin: 0 auto;
+}
+
+.video-modal-close {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 107, 53, 0.9);
+    color: var(--white);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    transition: var(--transition);
+    z-index: 10001;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
+
+.video-modal-close:hover {
+    background: var(--congress-orange);
+    transform: rotate(90deg) scale(1.1);
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.6);
+}
+
+.video-modal-back {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: var(--primary-blue);
+    color: var(--white);
+    padding: 12px 30px;
+    border-radius: 30px;
+    font-size: 15px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: var(--transition);
+    z-index: 10001;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
+
+.video-modal-back:hover {
+    background: var(--congress-orange);
+    transform: translateX(-5px);
+    box-shadow: 0 6px 20px rgba(30, 58, 95, 0.6);
+}
+
+.video-player-wrapper {
+    position: relative;
+    background: #000;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+    max-height: 75vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.video-player-wrapper video {
+    width: 100%;
+    max-height: 75vh;
+    height: auto;
+    display: block;
+    object-fit: contain;
+}
+
 /* =============================================
    HEALTH CAMPS SECTION
    ============================================= */
@@ -2390,6 +2609,15 @@ input, textarea, select {
         grid-template-columns: repeat(2, 1fr);
     }
     
+    .videos-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .media-tab-btn {
+        padding: 12px 30px;
+        font-size: 14px;
+    }
+    
     .camp-card {
         flex-direction: column;
     }
@@ -2468,6 +2696,48 @@ input, textarea, select {
     
     .gallery-grid {
         grid-template-columns: 1fr;
+    }
+    
+    .videos-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .media-tab-btn {
+        padding: 10px 20px;
+        font-size: 13px;
+    }
+    
+    .video-modal-close {
+        top: 10px;
+        right: 10px;
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+    }
+    
+    .video-modal-back {
+        top: 10px;
+        left: 10px;
+        padding: 10px 20px;
+        font-size: 13px;
+        gap: 6px;
+    }
+    
+    .video-modal-content {
+        width: 95%;
+        padding: 60px 10px 10px;
+    }
+    
+    .video-player-wrapper {
+        max-height: 60vh;
+    }
+    
+    .video-player-wrapper video {
+        max-height: 60vh;
+    }
+    
+    .video-play-overlay i {
+        font-size: 48px;
     }
     
     .quick-links {

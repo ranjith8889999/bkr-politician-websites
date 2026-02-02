@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', function() {
     initScrollAnimations();
     initCounter();
     initGallery();
+    initMediaTabs();
+    initVideoPlayer();
     initForms();
     initScrollTop();
 });
@@ -513,6 +515,88 @@ function initGallery() {
     // Close on overlay click
     lightbox?.addEventListener('click', function(e) {
         if (e.target === lightbox) closeLightbox();
+    });
+}
+
+// =============================================
+// MEDIA TABS (Photos/Videos)
+// =============================================
+function initMediaTabs() {
+    const tabBtns = document.querySelectorAll('.media-tab-btn');
+    const tabContents = document.querySelectorAll('.media-tab-content');
+    
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const targetTab = this.getAttribute('data-tab');
+            
+            // Remove active class from all buttons and contents
+            tabBtns.forEach(b => b.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
+            
+            // Add active class to clicked button and corresponding content
+            this.classList.add('active');
+            document.getElementById(targetTab + '-tab').classList.add('active');
+        });
+    });
+}
+
+// =============================================
+// VIDEO PLAYER
+// =============================================
+function initVideoPlayer() {
+    const videoItems = document.querySelectorAll('.video-item');
+    const videoModal = document.getElementById('videoModal');
+    const videoPlayer = document.getElementById('videoPlayer');
+    const videoModalClose = document.getElementById('videoModalClose');
+    const videoModalBack = document.getElementById('videoModalBack');
+    
+    if (!videoModal || !videoPlayer) return;
+    
+    // Open video player when video item is clicked
+    videoItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const videoSrc = this.getAttribute('data-video');
+            openVideoPlayer(videoSrc);
+        });
+    });
+    
+    function openVideoPlayer(src) {
+        videoPlayer.querySelector('source').src = src;
+        videoPlayer.load();
+        videoModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        
+        // Auto play the video
+        setTimeout(() => {
+            videoPlayer.play();
+        }, 300);
+    }
+    
+    function closeVideoPlayer() {
+        videoModal.classList.remove('active');
+        videoPlayer.pause();
+        videoPlayer.currentTime = 0;
+        document.body.style.overflow = 'auto';
+    }
+    
+    // Close button
+    videoModalClose.addEventListener('click', closeVideoPlayer);
+    
+    // Back button
+    videoModalBack.addEventListener('click', closeVideoPlayer);
+    
+    // Close on ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && videoModal.classList.contains('active')) {
+            closeVideoPlayer();
+        }
+    });
+    
+    // Close when clicking outside the video
+    videoModal.addEventListener('click', function(e) {
+        if (e.target === videoModal) {
+            closeVideoPlayer();
+        }
     });
 }
 

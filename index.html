@@ -426,74 +426,227 @@
         <div class="container">
             <div class="section-header animate-on-scroll">
                 <span class="section-tag">Moments</span>
-                <h2 class="section-title">Photo Gallery</h2>
+                <h2 class="section-title">Media Gallery</h2>
                 <div class="section-line"></div>
             </div>
-            <div class="gallery-filters animate-on-scroll">
-                <button class="filter-btn active" data-filter="all">All</button>
-                <button class="filter-btn" data-filter="events">Events</button>
-                <button class="filter-btn" data-filter="campaigns">Campaigns</button>
-                <button class="filter-btn" data-filter="community">Community</button>
+            
+            <!-- Media Tabs -->
+            <div class="media-tabs animate-on-scroll">
+                <button class="media-tab-btn active" data-tab="photos">
+                    <i class="fas fa-image"></i> Photos
+                </button>
+                <button class="media-tab-btn" data-tab="videos">
+                    <i class="fas fa-video"></i> Videos
+                </button>
             </div>
-            <div class="gallery-grid">
-                <div class="gallery-item animate-on-scroll" data-category="events">
-                    <img src="images/IMG-20240511-WA0031.jpg" alt="Event">
-                    <div class="gallery-overlay">
-                        <i class="fas fa-search-plus"></i>
+
+            <!-- Photos Tab Content -->
+            <div class="media-tab-content active" id="photos-tab">
+                <div class="gallery-filters animate-on-scroll">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="events">Events</button>
+                    <button class="filter-btn" data-filter="campaigns">Campaigns</button>
+                    <button class="filter-btn" data-filter="community">Community</button>
+                </div>
+                <div class="gallery-grid">
+                    <div class="gallery-item animate-on-scroll" data-category="events">
+                        <img src="images/IMG-20240511-WA0031.jpg" alt="Event">
+                        <div class="gallery-overlay">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                    </div>
+                    <div class="gallery-item animate-on-scroll" data-category="campaigns">
+                        <img src="images/IMG-20240511-WA0037.jpg" alt="Campaign">
+                        <div class="gallery-overlay">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                    </div>
+                    <div class="gallery-item animate-on-scroll" data-category="community">
+                        <img src="images/IMG-20240511-WA0041.jpg" alt="Community">
+                        <div class="gallery-overlay">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                    </div>
+                    <div class="gallery-item animate-on-scroll" data-category="events">
+                        <img src="images/IMG-20240511-WA0047.jpg" alt="Event">
+                        <div class="gallery-overlay">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                    </div>
+                    <div class="gallery-item animate-on-scroll" data-category="campaigns">
+                        <img src="images/IMG-20240511-WA0053.jpg" alt="Campaign">
+                        <div class="gallery-overlay">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                    </div>
+                    <div class="gallery-item animate-on-scroll" data-category="community">
+                        <img src="images/IMG-20240511-WA0054.jpg" alt="Community">
+                        <div class="gallery-overlay">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                    </div>
+                    <div class="gallery-item animate-on-scroll" data-category="events">
+                        <img src="images/IMG-20240511-WA0067-e1716212055795.jpg" alt="Event">
+                        <div class="gallery-overlay">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                    </div>
+                    <div class="gallery-item animate-on-scroll" data-category="community">
+                        <img src="images/IMG-20240511-WA0069-2-300x209.jpg" alt="Community">
+                        <div class="gallery-overlay">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                    </div>
+                    <div class="gallery-item animate-on-scroll" data-category="events">
+                        <img src="images/IMG_0178.JPG" alt="Event">
+                        <div class="gallery-overlay">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                    </div>
+                    <div class="gallery-item animate-on-scroll" data-category="events">
+                        <img src="images/IMG_0183.JPG" alt="Event">
+                        <div class="gallery-overlay">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                    </div>
+                    <div class="gallery-item animate-on-scroll" data-category="campaigns">
+                        <img src="images/Capture.PNG" alt="Campaign">
+                        <div class="gallery-overlay">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                    </div>
+                    <div class="gallery-item animate-on-scroll" data-category="campaigns">
+                        <img src="images/Capture2.PNG" alt="Campaign">
+                        <div class="gallery-overlay">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                    </div>
+                    <div class="gallery-item animate-on-scroll" data-category="community">
+                        <img src="images/Capture3.PNG" alt="Community">
+                        <div class="gallery-overlay">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                    </div>
+                    <div class="gallery-item animate-on-scroll" data-category="events">
+                        <img src="images/capture5.png" alt="Event">
+                        <div class="gallery-overlay">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                    </div>
+                    <div class="gallery-item animate-on-scroll" data-category="campaigns">
+                        <img src="images/Capture6.PNG" alt="Campaign">
+                        <div class="gallery-overlay">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                    </div>
+                    <div class="gallery-item animate-on-scroll" data-category="events">
+                        <img src="images/Capture8.PNG" alt="Event">
+                        <div class="gallery-overlay">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                    </div>
+                    <div class="gallery-item animate-on-scroll" data-category="community">
+                        <img src="images/Capture9.PNG" alt="Community">
+                        <div class="gallery-overlay">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
+                    </div>
+                    <div class="gallery-item animate-on-scroll" data-category="events">
+                        <img src="images/new1.PNG" alt="Event">
+                        <div class="gallery-overlay">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
                     </div>
                 </div>
-                <div class="gallery-item animate-on-scroll" data-category="campaigns">
-                    <img src="images/IMG-20240511-WA0037.jpg" alt="Campaign">
-                    <div class="gallery-overlay">
-                        <i class="fas fa-search-plus"></i>
+            </div>
+
+            <!-- Videos Tab Content -->
+            <div class="media-tab-content" id="videos-tab">
+                <div class="videos-grid">
+                    <div class="video-item animate-on-scroll" data-video="videos/OLGN0864.MP4">
+                        <div class="video-thumbnail">
+                            <video src="videos/OLGN0864.MP4" preload="metadata"></video>
+                            <div class="video-play-overlay">
+                                <i class="fas fa-play-circle"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h4>Community Event 1</h4>
+                        </div>
                     </div>
-                </div>
-                <div class="gallery-item animate-on-scroll" data-category="community">
-                    <img src="images/IMG-20240511-WA0041.jpg" alt="Community">
-                    <div class="gallery-overlay">
-                        <i class="fas fa-search-plus"></i>
+                    <div class="video-item animate-on-scroll" data-video="videos/OSJW2149.MP4">
+                        <div class="video-thumbnail">
+                            <video src="videos/OSJW2149.MP4" preload="metadata"></video>
+                            <div class="video-play-overlay">
+                                <i class="fas fa-play-circle"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h4>Community Event 2</h4>
+                        </div>
                     </div>
-                </div>
-                <div class="gallery-item animate-on-scroll" data-category="events">
-                    <img src="images/IMG-20240511-WA0047.jpg" alt="Event">
-                    <div class="gallery-overlay">
-                        <i class="fas fa-search-plus"></i>
+                    <div class="video-item animate-on-scroll" data-video="videos/PEKJ3354.MP4">
+                        <div class="video-thumbnail">
+                            <video src="videos/PEKJ3354.MP4" preload="metadata"></video>
+                            <div class="video-play-overlay">
+                                <i class="fas fa-play-circle"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h4>Community Event 3</h4>
+                        </div>
                     </div>
-                </div>
-                <div class="gallery-item animate-on-scroll" data-category="campaigns">
-                    <img src="images/IMG-20240511-WA0053.jpg" alt="Campaign">
-                    <div class="gallery-overlay">
-                        <i class="fas fa-search-plus"></i>
+                    <div class="video-item animate-on-scroll" data-video="videos/SRJJ6264.MP4">
+                        <div class="video-thumbnail">
+                            <video src="videos/SRJJ6264.MP4" preload="metadata"></video>
+                            <div class="video-play-overlay">
+                                <i class="fas fa-play-circle"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h4>Community Event 4</h4>
+                        </div>
                     </div>
-                </div>
-                <div class="gallery-item animate-on-scroll" data-category="community">
-                    <img src="images/IMG-20240511-WA0054.jpg" alt="Community">
-                    <div class="gallery-overlay">
-                        <i class="fas fa-search-plus"></i>
-                    </div>
-                </div>
-                <div class="gallery-item animate-on-scroll" data-category="events">
-                    <img src="images/IMG-20240511-WA0067-e1716212055795.jpg" alt="Event">
-                    <div class="gallery-overlay">
-                        <i class="fas fa-search-plus"></i>
-                    </div>
-                </div>
-                <div class="gallery-item animate-on-scroll" data-category="community">
-                    <img src="images/IMG-20240511-WA0069-2-300x209.jpg" alt="Community">
-                    <div class="gallery-overlay">
-                        <i class="fas fa-search-plus"></i>
+                    <div class="video-item animate-on-scroll" data-video="videos/SZXU8145.MP4">
+                        <div class="video-thumbnail">
+                            <video src="videos/SZXU8145.MP4" preload="metadata"></video>
+                            <div class="video-play-overlay">
+                                <i class="fas fa-play-circle"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h4>Community Event 5</h4>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Lightbox -->
+    <!-- Lightbox for Photos -->
     <div class="lightbox" id="lightbox">
         <button class="lightbox-close"><i class="fas fa-times"></i></button>
         <button class="lightbox-prev"><i class="fas fa-chevron-left"></i></button>
         <button class="lightbox-next"><i class="fas fa-chevron-right"></i></button>
         <img src="" alt="" class="lightbox-image">
+    </div>
+
+    <!-- Video Player Modal -->
+    <div class="video-modal" id="videoModal">
+        <div class="video-modal-content">
+            <button class="video-modal-close" id="videoModalClose">
+                <i class="fas fa-times"></i>
+            </button>
+            <button class="video-modal-back" id="videoModalBack">
+                <i class="fas fa-arrow-left"></i> Back to Videos
+            </button>
+            <div class="video-player-wrapper">
+                <video id="videoPlayer" controls>
+                    <source src="" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
     </div>
 
     <!-- Health Camps Section -->
