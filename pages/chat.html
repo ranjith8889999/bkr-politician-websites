@@ -618,6 +618,89 @@
         .scroll-to-bottom i {
             font-size: 14px;
         }
+
+        /* Suggested Questions */
+        .suggestions-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 40px;
+            animation: slideInUp 0.6s ease-out 0.3s both;
+        }
+
+        .suggestion-text {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            font-weight: 500;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .suggestions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 12px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .suggestion-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 16px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-align: left;
+            line-height: 1.5;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .suggestion-btn i {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .suggestion-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .suggestion-btn:active {
+            transform: translateY(-2px);
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .suggestions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .suggestion-btn {
+                padding: 14px 16px;
+                font-size: 13px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -697,6 +780,23 @@
         <!-- Welcome Screen -->
         <div class="welcome-screen" id="welcomeScreen">
             <h1 class="welcome-title">BKR AI V1.0</h1>
+            <div class="suggestions-container">
+                <p class="suggestion-text">Try asking me</p>
+                <div class="suggestions-grid">
+                    <button class="suggestion-btn" onclick="sendSuggestion('Tell me about Bongunuri Kishore Reddy')">
+                        <i class="fas fa-user"></i>
+                        Tell me about Bongunuri Kishore Reddy
+                    </button>
+                    <button class="suggestion-btn" onclick="sendSuggestion('How can I register as a volunteer?')">
+                        <i class="fas fa-handshake"></i>
+                        How can I register as a volunteer?
+                    </button>
+                    <button class="suggestion-btn" onclick="sendSuggestion('What are the upcoming health camps?')">
+                        <i class="fas fa-hospital"></i>
+                        What are the upcoming health camps?
+                    </button>
+                </div>
+            </div>
         </div>
 
         <!-- Messages Area -->

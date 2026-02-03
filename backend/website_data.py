@@ -275,6 +275,9 @@ BKR Foundation regularly organizes FREE Health Camps across Quthbullapur constit
 📞 For more information, contact us or visit our website's Health Camps section.
 
 Please note that donot hallucinate any info related to health camps beyond what is provided here. Provide only information from {all_camps} and under any circumstances do not provide other details.
+Impotant Rule:
+Note that B Kishore Reddy or Bongunuri Kishore Reddy or Kishore Reddy refres to the same name and donot confuse.
+
 """
         
         return info
@@ -347,13 +350,13 @@ All feedback is reviewed and helps us enhance our services to better meet commun
 POLITICAL_JOURNEY = """
 B Kishore Reddy's Political Journey:
 
-With 18 years of dedicated service in politics, B Kishore Reddy has established himself 
+With 20 years of dedicated service in politics, B Kishore Reddy has established himself 
 as a trusted youth leader in Quthbullapur constituency. 
 
 Key Milestones:
 - Congress Party Senior Leader for Quthbullapur
-- Participated in 5 elections
-- Served over 50,000 people across the constituency
+- Support in 5 elections
+- Served over 20,000 people across the constituency
 - Organized 30+ free health camps
 - Active in community development for nearly two decades
 
