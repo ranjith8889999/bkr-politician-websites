@@ -7,17 +7,18 @@ This data is used by the AI to answer user questions
 KISHORE_REDDY_INFO = {
     "name": "Bongunuri Kishore Reddy (B Kishore Reddy)",
     "full_name": "B Kishore Reddy",
-    "position": "Congress Party Senior Leader",
+    "position": "Vice-Chairman, Telangana State Protocol and Coordination Corporation",
     "constituency": "Quthbullapur Constituency",
     "location": "Quthbullapur, Telangana, India",
     "party": "Indian National Congress",
     
     "about": """
-    B Kishore Reddy is a dedicated Congress leader and Congress Party Senior Leader for Quthbullapur Constituency. 
+    Bongunuri Kishore Reddy is a prominent leader of the Indian National Congress in Telangana, 
+    currently serving as the Vice-Chairman of the Telangana State Protocol and Coordination Corporation.
     He is committed to serving the people with honesty, development, and youth empowerment. 
-    With 18 years of experience in politics, he has served over 50,000 people and organized 
+    With 20 years of experience in politics, he has served over 50,000 people and organized 
     more than 30 health camps. He has participated in 5 elections and continues to work 
-    towards a better Quthbullapur.
+    towards a better Telangana.
     """,
     
     "experience": {
@@ -354,7 +355,8 @@ With 20 years of dedicated service in politics, B Kishore Reddy has established 
 as a trusted youth leader in Quthbullapur constituency. 
 
 Key Milestones:
-- Congress Party Senior Leader for Quthbullapur
+- Vice-Chairman of the Telangana State Protocol and Coordination Corporation
+- Prominent leader of the Indian National Congress in Telangana
 - Support in 5 elections
 - Served over 20,000 people across the constituency
 - Organized 30+ free health camps
@@ -367,7 +369,7 @@ on inclusive development, social justice, and empowerment of marginalized commun
 FAQ = [
     {
         "question": "Who is B Kishore Reddy?",
-        "answer": "B Kishore Reddy is the Congress Party Senior Leader for Quthbullapur Constituency. He has 18 years of political experience and is dedicated to serving the people with honesty, development, and youth empowerment."
+        "answer": "Bongunuri Kishore Reddy is a prominent leader of the Indian National Congress in Telangana, currently serving as the Vice-Chairman of the Telangana State Protocol and Coordination Corporation. He has 20 years of political experience and is dedicated to serving the people with honesty, development, and youth empowerment."
     },
     {
         "question": "What areas does he serve?",
@@ -400,7 +402,7 @@ FAQ = [
 ]
 
 # System prompt for AI to ensure it stays within bounds
-SYSTEM_PROMPT = """You are an AI assistant for B Kishore Reddy, Congress Party Senior Leader for Quthbullapur Constituency. 
+SYSTEM_PROMPT = """You are an AI assistant for Bongunuri Kishore Reddy (B Kishore Reddy), a prominent leader of the Indian National Congress in Telangana, currently serving as the Vice-Chairman of the Telangana State Protocol and Coordination Corporation.
 
 Your role is to help people learn about B Kishore Reddy, BKR Foundation, and their community service initiatives.
 
