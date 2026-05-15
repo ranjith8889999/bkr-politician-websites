@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/jpeg" href="../images/favicon.jpeg">
+    <link rel="apple-touch-icon" href="../images/favicon.jpeg">
     <meta name="description" content="Give Feedback - B Kishore Reddy | Vice-Chairman, Telangana State Protocol and Coordination Corporation | Quthbullapur">
     <title>Give Feedback | B Kishore Reddy</title>
     <link rel="stylesheet" href="../css/style.css">
@@ -290,6 +292,10 @@
                 <li><a href="../index.html#gallery" class="nav-link">Gallery</a></li>
                 <li><a href="health-camps.html" class="nav-link">Health Camps</a></li>
                 <li><a href="../index.html#contact" class="nav-link">Contact</a></li>
+                <li class="nav-lang">
+                    <button id="langToggleBtn" class="lang-toggle-btn" onclick="toggleLanguage()">TE</button>
+                    <div id="google_translate_element" style="display:none;"></div>
+                </li>
             </ul>
         </div>
     </nav>
@@ -556,5 +562,7 @@
             }
         });
     </script>
+    <script type="text/javascript" src="../js/translate.js"></script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
